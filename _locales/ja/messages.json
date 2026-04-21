@@ -1,0 +1,496 @@
+{
+   "active": {
+      "description": "有効ステータス",
+      "message": "有効"
+   },
+   "add": {
+      "description": "追加ボタン",
+      "message": "追加"
+   },
+   "allDomains": {
+      "description": "すべてのドメイン",
+      "message": "すべてのドメイン"
+   },
+   "allStatus": {
+      "description": "すべてのステータス",
+      "message": "すべてのステータス"
+   },
+   "automationRules": {
+      "description": "自動化ルールのタイトル",
+      "message": "自動化ルール"
+   },
+   "backgroundColor": {
+      "description": "背景色ラベル",
+      "message": "背景色"
+   },
+   "blacklist": {
+      "description": "ブラックリストラベル",
+      "message": "ブラックリスト（これらのURLをマークしない）"
+   },
+   "blacklistPlaceholder": {
+      "description": "ブラックリスト入力プレースホルダー",
+      "message": "例: *.baidu.com または *.baidu.com/search*"
+   },
+   "bold": {
+      "description": "太字テキストスタイル",
+      "message": "太字"
+   },
+   "cancel": {
+      "description": "キャンセルボタン",
+      "message": "キャンセル"
+   },
+   "check": {
+      "description": "チェックアイコンスタイル",
+      "message": "チェック"
+   },
+   "clearAll": {
+      "description": "すべてクリアボタン",
+      "message": "すべてクリア"
+   },
+   "clearAllConfirm": {
+      "description": "履歴ページのすべてクリア確認プロンプト",
+      "message": "すべての履歴記録をクリアしてもよろしいですか？この操作は元に戻せません。"
+   },
+   "clearAllMarks": {
+      "description": "すべてのマークをクリアボタン",
+      "message": "すべてのマークをクリア"
+   },
+   "clearAllMessage": {
+      "description": "すべてクリア後のメッセージ",
+      "message": "すべての履歴記録がクリアされました。"
+   },
+   "clearConfirm": {
+      "description": "クリア確認プロンプト（共有）",
+      "message": "すべてのマーク記録をクリアしてもよろしいですか？この操作は元に戻せません。"
+   },
+   "clearExpired": {
+      "description": "期限切れ記録クリアボタン",
+      "message": "期限切れをクリア"
+   },
+   "clearExpiredMessage": {
+      "description": "期限切れ記録をクリアした後のメッセージ",
+      "message": "{count} 件の期限切れ記録がクリアされました。",
+      "placeholders": {
+         "count": {
+            "content": "$1",
+            "example": "10"
+         }
+      }
+   },
+   "clearFailed": {
+      "description": "クリア失敗プロンプト",
+      "message": "クリア失敗：{error}",
+      "placeholders": {
+         "error": {
+            "content": "$1",
+            "example": "Unknown error"
+         }
+      }
+   },
+   "clearMarks": {
+      "description": "マーククリアの提案",
+      "message": "不要なマークをクリアする"
+   },
+   "clearSuccess": {
+      "description": "クリア成功タイトル",
+      "message": "クリア成功"
+   },
+   "confirmImport": {
+      "description": "インポート確認ボタン",
+      "message": "インポートを確認"
+   },
+   "customTimeFormat": {
+      "description": "カスタム時間形式ラベル",
+      "message": "カスタム時間形式"
+   },
+   "customTimeFormatPlaceholder": {
+      "description": "カスタム時間形式プレースホルダー",
+      "message": "例: YYYY/MM/DD"
+   },
+   "delete": {
+      "description": "削除ボタン",
+      "message": "削除"
+   },
+   "deleteConfirm": {
+      "description": "削除確認プロンプト",
+      "message": "このマークを削除してもよろしいですか？"
+   },
+   "deleteError": {
+      "description": "削除エラープロンプト",
+      "message": "削除中にエラーが発生しました：{error}",
+      "placeholders": {
+         "error": {
+            "content": "$1",
+            "example": "Unknown error"
+         }
+      }
+   },
+   "deleteFailed": {
+      "description": "削除失敗タイトル",
+      "message": "削除失敗"
+   },
+   "deleteSuccess": {
+      "description": "単一削除成功タイトル",
+      "message": "削除成功"
+   },
+   "deleteSuccessMessage": {
+      "description": "単一削除成功の詳細プロンプト",
+      "message": "選択されたマーク記録が削除されました。"
+   },
+   "disabled": {
+      "description": "無効状態",
+      "message": "無効"
+   },
+   "domain": {
+      "description": "ドメイン",
+      "message": "ドメイン"
+   },
+   "domainFilter": {
+      "description": "ドメインフィルターラベル",
+      "message": "ドメインフィルター"
+   },
+   "dot": {
+      "description": "ドットアイコンスタイル",
+      "message": "ドット"
+   },
+   "enableAutomationRules": {
+      "description": "自動化ルール有効化ラベル",
+      "message": "自動化ルールを有効にする"
+   },
+   "enableBackgroundColor": {
+      "description": "背景色有効化ラベル",
+      "message": "背景色を有効にする"
+   },
+   "enabled": {
+      "description": "有効状態",
+      "message": "有効"
+   },
+   "error": {
+      "description": "一般的なエラータイトル",
+      "message": "エラー"
+   },
+   "expired": {
+      "description": "期限切れステータス",
+      "message": "期限切れ"
+   },
+   "expiredMarks": {
+      "description": "期限切れマーク",
+      "message": "期限切れマーク"
+   },
+   "export": {
+      "description": "エクスポートボタン",
+      "message": "エクスポート"
+   },
+   "exportSuccess": {
+      "description": "エクスポート成功プロンプト",
+      "message": "エクスポート成功！"
+   },
+   "exportSuccessMessage": {
+      "description": "エクスポート成功の詳細プロンプト",
+      "message": "データはファイル {fileName} にエクスポートされました。",
+      "placeholders": {
+         "fileName": {
+            "content": "$1",
+            "example": "link-marker-data-2026-02-09_12-00-00.json"
+         }
+      }
+   },
+   "extensionDescription": {
+      "description": "拡張機能の説明",
+      "message": "Webページでクリックされたリンクをマークして追跡する"
+   },
+   "extensionName": {
+      "description": "拡張機能名",
+      "message": "リンクマーカー"
+   },
+   "filter": {
+      "description": "フィルタータイトル",
+      "message": "フィルター"
+   },
+   "footerVersion": {
+      "description": "履歴ページ下部のバージョン情報",
+      "message": "リンクマーカー v1.0.0"
+   },
+   "globalEnable": {
+      "description": "グローバル有効化トグルラベル",
+      "message": "グローバル有効化"
+   },
+   "highlightOpacity": {
+      "description": "ハイライト透明度ラベル",
+      "message": "ハイライト透明度"
+   },
+   "history": {
+      "description": "履歴ボタン",
+      "message": "履歴"
+   },
+   "historyDescription": {
+      "description": "履歴ページの説明",
+      "message": "リンクマーク履歴を表示・管理する"
+   },
+   "historyTitle": {
+      "description": "履歴ページのタイトル",
+      "message": "リンクマーカー - マーク履歴"
+   },
+   "iconSize": {
+      "description": "アイコンサイズラベル",
+      "message": "アイコンサイズ"
+   },
+   "iconStyle": {
+      "description": "アイコンスタイルラベル",
+      "message": "プレフィックスアイコンスタイル"
+   },
+   "import": {
+      "description": "インポートボタン",
+      "message": "インポート"
+   },
+   "importAppend": {
+      "description": "インポートモード：追加",
+      "message": "既存データに追加"
+   },
+   "importError": {
+      "description": "インポート失敗プロンプト",
+      "message": "インポート失敗、ファイル形式を確認してください"
+   },
+   "importFailed": {
+      "description": "インポート失敗タイトル",
+      "message": "インポート失敗"
+   },
+   "importReplace": {
+      "description": "インポートモード：上書き",
+      "message": "既存データを上書き"
+   },
+   "importSuccess": {
+      "description": "インポート成功プロンプト",
+      "message": "インポート成功！"
+   },
+   "importSuccessMessage": {
+      "description": "インポート成功の詳細プロンプト",
+      "message": "データは正常にインポートされました。"
+   },
+   "increaseLimit": {
+      "description": "マーク数上限増加の提案",
+      "message": "オプション設定でマーク数上限を増やす"
+   },
+   "info": {
+      "description": "一般的な情報タイトル",
+      "message": "情報"
+   },
+   "italic": {
+      "description": "斜体テキストスタイル",
+      "message": "斜体"
+   },
+   "jsonFormatError": {
+      "description": "JSON 形式エラープロンプト",
+      "message": "JSON ファイル形式エラー、確認してから再試行してください。"
+   },
+   "linkText": {
+      "description": "リンクテキスト",
+      "message": "リンクテキスト"
+   },
+   "linkUrl": {
+      "description": "リンクURL",
+      "message": "リンクURL"
+   },
+   "mainColor": {
+      "description": "メインカラーラベル",
+      "message": "メインカラー"
+   },
+   "markHistory": {
+      "description": "マーク履歴のタイトル",
+      "message": "マーク履歴"
+   },
+   "markLimitReached": {
+      "description": "マーク数上限警告タイトル",
+      "message": "マーク数上限に達しました"
+   },
+   "markLimitWarning": {
+      "description": "マーク数上限警告内容",
+      "message": "このページで{count}個のリンクをマークしました。設定された上限{limit}に達しました。以下の操作ができます：",
+      "placeholders": {
+         "count": {
+            "content": "$1",
+            "example": "100"
+         },
+         "limit": {
+            "content": "$2",
+            "example": "1000"
+         }
+      }
+   },
+   "markLink": {
+      "description": "コンテキストメニューリンクマーク",
+      "message": "このリンクをマーク"
+   },
+   "markStatus": {
+      "description": "マークステータス",
+      "message": "マークステータス"
+   },
+   "markTime": {
+      "description": "マーク時間",
+      "message": "マーク時間"
+   },
+   "markTimeConfiguration": {
+      "description": "マーク時間設定のタイトル",
+      "message": "マーク時間設定"
+   },
+   "markValidDuration": {
+      "description": "マーク有効期間ラベル",
+      "message": "マーク有効期間"
+   },
+   "markedDomains": {
+      "description": "マークされたドメイン数",
+      "message": "マークされたドメイン数"
+   },
+   "maxLinksPerPage": {
+      "description": "ページあたりの最大リンク数ラベル",
+      "message": "ページあたりの最大リンク数"
+   },
+   "noExpiredRecords": {
+      "description": "期限切れ記録がない場合のプロンプト",
+      "message": "現在、クリアできる期限切れ記録はありません。"
+   },
+   "noMarks": {
+      "description": "マーク記録なしプロンプト",
+      "message": "マーク記録がありません"
+   },
+   "noText": {
+      "description": "リンクにテキストがない場合のプレースホルダー",
+      "message": "（テキストなし）"
+   },
+   "oneDay": {
+      "description": "1日",
+      "message": "1日"
+   },
+   "oneHour": {
+      "description": "1時間",
+      "message": "1時間"
+   },
+   "operations": {
+      "description": "操作列タイトル",
+      "message": "操作"
+   },
+   "optionsDescription": {
+      "description": "オプションページの説明",
+      "message": "リンクマーカーの外観と動作をカスタマイズする"
+   },
+   "optionsSettings": {
+      "description": "オプション設定ボタン",
+      "message": "オプション設定"
+   },
+   "optionsTitle": {
+      "description": "オプションページのタイトル",
+      "message": "リンクマーカー - オプション設定"
+   },
+   "performanceAndQuantity": {
+      "description": "パフォーマンスと数量設定のタイトル",
+      "message": "パフォーマンスと数量設定"
+   },
+   "permanent": {
+      "description": "永続",
+      "message": "永続"
+   },
+   "popupTitle": {
+      "description": "ポップアップウィンドウのタイトル",
+      "message": "リンクマーカー"
+   },
+   "recordNotFound": {
+      "description": "記録が見つからない場合のプロンプト",
+      "message": "削除する記録が見つかりませんでした。"
+   },
+   "refresh": {
+      "description": "リスト更新ボタン",
+      "message": "リストを更新"
+   },
+   "refreshPage": {
+      "description": "ページ更新の提案",
+      "message": "ページを更新してマークを再開する"
+   },
+   "resetDefault": {
+      "description": "デフォルトに戻すボタン",
+      "message": "デフォルトに戻す"
+   },
+   "saveSettings": {
+      "description": "設定保存ボタン",
+      "message": "設定を保存"
+   },
+   "searchPlaceholder": {
+      "description": "検索ボックスプレースホルダー",
+      "message": "リンクまたはドメインを検索..."
+   },
+   "selectFile": {
+      "description": "ファイル未選択プロンプト",
+      "message": "インポートする JSON ファイルを選択してください。"
+   },
+   "sevenDays": {
+      "description": "7日",
+      "message": "7日"
+   },
+   "showMarkTime": {
+      "description": "マーク時間表示ラベル",
+      "message": "マーク時間を表示"
+   },
+   "star": {
+      "description": "星アイコンスタイル",
+      "message": "星"
+   },
+   "statistics": {
+      "description": "統計情報のタイトル",
+      "message": "統計情報"
+   },
+   "statusFilter": {
+      "description": "ステータスフィルターラベル",
+      "message": "ステータスフィルター"
+   },
+   "strikethrough": {
+      "description": "取り消し線テキストスタイル",
+      "message": "取り消し線"
+   },
+   "styleCustomization": {
+      "description": "スタイルカスタマイズのタイトル",
+      "message": "スタイルカスタマイズ"
+   },
+   "textStyle": {
+      "description": "テキストスタイルラベル",
+      "message": "テキストスタイル"
+   },
+   "thirtyDays": {
+      "description": "30日",
+      "message": "30日"
+   },
+   "timeDisplayFormat": {
+      "description": "時間表示形式ラベル",
+      "message": "時間表示形式"
+   },
+   "totalMarks": {
+      "description": "総マーク数",
+      "message": "総マーク数"
+   },
+   "unlimited": {
+      "description": "無制限",
+      "message": "無制限"
+   },
+   "unmarkLink": {
+      "description": "コンテキストメニューリンクマーク解除",
+      "message": "このリンクのマークを解除"
+   },
+   "valid": {
+      "description": "有効ステータス",
+      "message": "有効"
+   },
+   "validMarks": {
+      "description": "有効マーク",
+      "message": "有効マーク"
+   },
+   "version": {
+      "description": "バージョンラベル",
+      "message": "バージョン"
+   },
+   "whitelist": {
+      "description": "ホワイトリストラベル",
+      "message": "ホワイトリスト（これらのURLのみマーク）"
+   },
+   "whitelistPlaceholder": {
+      "description": "ホワイトリスト入力プレースホルダー",
+      "message": "例: *.google.com または *.google.com/search*"
+   }
+}

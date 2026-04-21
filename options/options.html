@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="optionsTitle">链接标记器 - 选项设置</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    <header>
+      <h1 data-i18n="optionsTitle">链接标记器 - 选项设置</h1>
+      <p data-i18n="optionsDescription">自定义链接标记的外观和行为</p>
+    </header>
+    
+    <main>
+      <!-- 样式自定义 -->
+      <section class="option-section">
+        <h2 data-i18n="textStyle">文本样式</h2>
+        
+        <div class="option-group">
+          <label data-i18n="textStyle">文本样式</label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" id="bold"> <span data-i18n="bold">加粗</span></label>
+            <label><input type="checkbox" id="italic"> <span data-i18n="italic">倾斜</span></label>
+            <label><input type="checkbox" id="strikethrough"> <span data-i18n="strikethrough">删除线</span></label>
+          </div>
+        </div>
+        
+        <div class="option-group">
+          <label data-i18n="enableBackgroundColor">启用背景色</label>
+          <label class="toggle">
+            <input type="checkbox" id="highlight">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="option-group">
+          <label data-i18n="backgroundColor">背景色</label>
+          <input type="color" id="highlight-color" value="#FFFF00">
+        </div>
+        
+        <div class="option-group">
+          <label data-i18n="highlightOpacity">高亮透明度: <span id="highlight-opacity-value">50</span>%</label>
+          <input type="range" id="highlight-opacity" min="0" max="100" value="50">
+        </div>
+        
+        <div class="option-group">
+          <label data-i18n="mainColor">主颜色</label>
+          <input type="color" id="main-color" value="#4CAF50">
+        </div>
+      </section>
+      
+      <!-- 标记时间配置 -->
+      <section class="option-section">
+        <h2 data-i18n="markTimeConfiguration">标记时间配置</h2>
+        
+        <div class="option-group">
+          <label data-i18n="markValidDuration">标记有效时长</label>
+          <select id="duration">
+            <option value="1h" data-i18n="oneHour">1小时</option>
+            <option value="1d" data-i18n="oneDay">1天</option>
+            <option value="7d" data-i18n="sevenDays">7天</option>
+            <option value="30d" data-i18n="thirtyDays">30天</option>
+            <option value="permanent" data-i18n="permanent">永久</option>
+          </select>
+        </div>
+        
+        <div class="option-group">
+          <label data-i18n="timeDisplayFormat">时间显示格式</label>
+          <select id="time-format">
+            <option value="YYYY-MM-DD HH:MM:SS">YYYY-MM-DD HH:MM:SS</option>
+            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+            <option value="MM-DD HH:MM">MM-DD HH:MM</option>
+            <option value="custom" data-i18n="customTimeFormat">自定义</option>
+          </select>
+        </div>
+        
+        <div class="option-group" id="custom-time-format-group">
+          <label data-i18n="customTimeFormat">自定义时间格式</label>
+          <input type="text" id="custom-time-format" data-i18n-placeholder="customTimeFormatPlaceholder" placeholder="例如: YYYY/MM/DD">
+        </div>
+        
+        <div class="option-group">
+          <label data-i18n="showMarkTime">显示标记时间</label>
+          <label class="toggle">
+            <input type="checkbox" id="show-time">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </section>
+      
+      <!-- 自动化规则 -->
+      <section class="option-section">
+        <h2 data-i18n="automationRules">自动化规则</h2>
+        
+        <div class="option-group">
+          <label data-i18n="enableAutomationRules">启用自动化规则</label>
+          <label class="toggle">
+            <input type="checkbox" id="auto-rules-enabled">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="option-group">
+          <label data-i18n="blacklist">黑名单（不标记这些URL）</label>
+          <div class="list-management">
+            <input type="text" id="blacklist-input" data-i18n-placeholder="blacklistPlaceholder" placeholder="例如: *.baidu.com 或 *.baidu.com/search*">
+            <button id="add-blacklist" data-i18n="add">添加</button>
+            <ul id="blacklist-list"></ul>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <label data-i18n="whitelist">白名单（仅标记这些URL）</label>
+          <div class="list-management">
+            <input type="text" id="whitelist-input" data-i18n-placeholder="whitelistPlaceholder" placeholder="例如: *.google.com 或 *.google.com/search*">
+            <button id="add-whitelist" data-i18n="add">添加</button>
+            <ul id="whitelist-list"></ul>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 性能与数量配置 -->
+      <section class="option-section">
+        <h2 data-i18n="performanceAndQuantity">性能与数量配置</h2>
+        
+        <div class="option-group">
+          <label data-i18n="maxLinksPerPage">单网页标记数量上限</label>
+          <select id="max-links-per-page">
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+            <option value="999999" data-i18n="unlimited">无限</option>
+          </select>
+        </div>
+      </section>
+      
+      <!-- 保存按钮 -->
+      <div class="button-group">
+        <button id="save-btn" class="btn btn-primary" data-i18n="saveSettings">保存设置</button>
+        <button id="reset-btn" class="btn btn-secondary" data-i18n="resetDefault">恢复默认</button>
+      </div>
+    </main>
+    
+    <footer>
+      <p data-i18n="version">链接标记器 v1.0.0</p>
+    </footer>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html>

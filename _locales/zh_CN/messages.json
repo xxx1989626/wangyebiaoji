@@ -1,0 +1,496 @@
+{
+   "active": {
+      "description": "有效状态",
+      "message": "有效"
+   },
+   "add": {
+      "description": "添加按钮",
+      "message": "添加"
+   },
+   "allDomains": {
+      "description": "所有域名",
+      "message": "所有域名"
+   },
+   "allStatus": {
+      "description": "所有状态",
+      "message": "所有状态"
+   },
+   "automationRules": {
+      "description": "自动化规则标题",
+      "message": "自动化规则"
+   },
+   "backgroundColor": {
+      "description": "背景色标签",
+      "message": "背景色"
+   },
+   "blacklist": {
+      "description": "黑名单标签",
+      "message": "黑名单（不标记这些URL）"
+   },
+   "blacklistPlaceholder": {
+      "description": "黑名单输入框占位符",
+      "message": "例如: *.baidu.com 或 *.baidu.com/search*"
+   },
+   "bold": {
+      "description": "加粗文本样式",
+      "message": "加粗"
+   },
+   "cancel": {
+      "description": "取消按钮",
+      "message": "取消"
+   },
+   "check": {
+      "description": "对勾图标样式",
+      "message": "对勾"
+   },
+   "clearAll": {
+      "description": "清除全部按钮",
+      "message": "清除全部"
+   },
+   "clearAllConfirm": {
+      "description": "历史记录页面清除全部确认提示",
+      "message": "确定要清除所有历史记录吗？此操作不可撤销。"
+   },
+   "clearAllMarks": {
+      "description": "清除所有标记按钮",
+      "message": "一键清除所有标记"
+   },
+   "clearAllMessage": {
+      "description": "清除全部后的提示信息",
+      "message": "所有历史记录已被清除。"
+   },
+   "clearConfirm": {
+      "description": "清除确认提示（弹窗/弹出层共用）",
+      "message": "确定要清除所有标记记录吗？此操作不可撤销。"
+   },
+   "clearExpired": {
+      "description": "清除过期记录按钮",
+      "message": "清除过期记录"
+   },
+   "clearExpiredMessage": {
+      "description": "清除过期记录后的提示信息",
+      "message": "已清除 {count} 条过期记录。",
+      "placeholders": {
+         "count": {
+            "content": "$1",
+            "example": "10"
+         }
+      }
+   },
+   "clearFailed": {
+      "description": "清除失败提示",
+      "message": "清除失败：{error}",
+      "placeholders": {
+         "error": {
+            "content": "$1",
+            "example": "Unknown error"
+         }
+      }
+   },
+   "clearMarks": {
+      "description": "清除标记建议",
+      "message": "清除一些不需要的标记"
+   },
+   "clearSuccess": {
+      "description": "清除成功标题",
+      "message": "清除成功"
+   },
+   "confirmImport": {
+      "description": "确认导入按钮",
+      "message": "确认导入"
+   },
+   "customTimeFormat": {
+      "description": "自定义时间格式标签",
+      "message": "自定义时间格式"
+   },
+   "customTimeFormatPlaceholder": {
+      "description": "自定义时间格式占位符",
+      "message": "例如: YYYY/MM/DD"
+   },
+   "delete": {
+      "description": "删除按钮",
+      "message": "删除"
+   },
+   "deleteConfirm": {
+      "description": "删除确认提示",
+      "message": "确定要删除此标记吗？"
+   },
+   "deleteError": {
+      "description": "删除错误提示",
+      "message": "删除时发生错误：{error}",
+      "placeholders": {
+         "error": {
+            "content": "$1",
+            "example": "Unknown error"
+         }
+      }
+   },
+   "deleteFailed": {
+      "description": "删除失败标题",
+      "message": "删除失败"
+   },
+   "deleteSuccess": {
+      "description": "单条删除成功标题",
+      "message": "删除成功"
+   },
+   "deleteSuccessMessage": {
+      "description": "单条删除成功详细提示",
+      "message": "选中的标记记录已被删除。"
+   },
+   "disabled": {
+      "description": "已禁用状态",
+      "message": "已禁用"
+   },
+   "domain": {
+      "description": "所属域名",
+      "message": "所属域名"
+   },
+   "domainFilter": {
+      "description": "域名筛选标签",
+      "message": "域名筛选"
+   },
+   "dot": {
+      "description": "圆点图标样式",
+      "message": "圆点"
+   },
+   "enableAutomationRules": {
+      "description": "启用自动化规则标签",
+      "message": "启用自动化规则"
+   },
+   "enableBackgroundColor": {
+      "description": "启用背景色标签",
+      "message": "启用背景色"
+   },
+   "enabled": {
+      "description": "已启用状态",
+      "message": "已启用"
+   },
+   "error": {
+      "description": "通用错误标题",
+      "message": "错误"
+   },
+   "expired": {
+      "description": "过期状态",
+      "message": "过期"
+   },
+   "expiredMarks": {
+      "description": "过期标记",
+      "message": "过期标记"
+   },
+   "export": {
+      "description": "导出按钮",
+      "message": "导出"
+   },
+   "exportSuccess": {
+      "description": "导出成功提示",
+      "message": "导出成功！"
+   },
+   "exportSuccessMessage": {
+      "description": "导出成功详细提示",
+      "message": "数据已导出到文件：{fileName}",
+      "placeholders": {
+         "fileName": {
+            "content": "$1",
+            "example": "link-marker-data-2026-02-09_12-00-00.json"
+         }
+      }
+   },
+   "extensionDescription": {
+      "description": "扩展描述",
+      "message": "标记并跟踪网页中点击过的链接"
+   },
+   "extensionName": {
+      "description": "扩展名称",
+      "message": "链接标记器"
+   },
+   "filter": {
+      "description": "筛选标题",
+      "message": "筛选"
+   },
+   "footerVersion": {
+      "description": "历史页底部版本信息",
+      "message": "链接标记器 v1.0.0"
+   },
+   "globalEnable": {
+      "description": "全局启用开关标签",
+      "message": "全局启用"
+   },
+   "highlightOpacity": {
+      "description": "高亮透明度标签",
+      "message": "高亮透明度"
+   },
+   "history": {
+      "description": "历史记录按钮",
+      "message": "历史记录"
+   },
+   "historyDescription": {
+      "description": "历史记录页面描述",
+      "message": "查看和管理您的链接标记历史记录"
+   },
+   "historyTitle": {
+      "description": "历史记录页面标题",
+      "message": "链接标记器 - 标记历史"
+   },
+   "iconSize": {
+      "description": "图标大小标签",
+      "message": "图标大小"
+   },
+   "iconStyle": {
+      "description": "图标样式标签",
+      "message": "前缀图标样式"
+   },
+   "import": {
+      "description": "导入按钮",
+      "message": "导入"
+   },
+   "importAppend": {
+      "description": "导入模式：追加",
+      "message": "追加到现有数据"
+   },
+   "importError": {
+      "description": "导入失败提示",
+      "message": "导入失败，请检查文件格式"
+   },
+   "importFailed": {
+      "description": "导入失败标题",
+      "message": "导入失败"
+   },
+   "importReplace": {
+      "description": "导入模式：覆盖",
+      "message": "覆盖现有数据"
+   },
+   "importSuccess": {
+      "description": "导入成功提示",
+      "message": "导入成功！"
+   },
+   "importSuccessMessage": {
+      "description": "导入成功详细提示",
+      "message": "数据已成功导入。"
+   },
+   "increaseLimit": {
+      "description": "增加标记数量上限建议",
+      "message": "在选项设置中增加标记数量上限"
+   },
+   "info": {
+      "description": "通用信息标题",
+      "message": "提示"
+   },
+   "italic": {
+      "description": "倾斜文本样式",
+      "message": "倾斜"
+   },
+   "jsonFormatError": {
+      "description": "JSON 格式错误提示",
+      "message": "JSON 文件格式错误，请检查后重试。"
+   },
+   "linkText": {
+      "description": "链接文字",
+      "message": "链接文字"
+   },
+   "linkUrl": {
+      "description": "链接地址",
+      "message": "链接地址"
+   },
+   "mainColor": {
+      "description": "主颜色标签",
+      "message": "主颜色"
+   },
+   "markHistory": {
+      "description": "标记历史标题",
+      "message": "标记历史"
+   },
+   "markLimitReached": {
+      "description": "标记数量上限警告标题",
+      "message": "标记数量已达上限"
+   },
+   "markLimitWarning": {
+      "description": "标记数量上限警告内容",
+      "message": "当前页面已标记 {count} 个链接，已达到设置的上限 {limit}。您可以：",
+      "placeholders": {
+         "count": {
+            "content": "$1",
+            "example": "100"
+         },
+         "limit": {
+            "content": "$2",
+            "example": "1000"
+         }
+      }
+   },
+   "markLink": {
+      "description": "右键菜单标记链接",
+      "message": "标记此链接"
+   },
+   "markStatus": {
+      "description": "标记状态",
+      "message": "标记状态"
+   },
+   "markTime": {
+      "description": "标记时间",
+      "message": "标记时间"
+   },
+   "markTimeConfiguration": {
+      "description": "标记时间配置标题",
+      "message": "标记时间配置"
+   },
+   "markValidDuration": {
+      "description": "标记有效时长标签",
+      "message": "标记有效时长"
+   },
+   "markedDomains": {
+      "description": "标记域名数",
+      "message": "标记域名数"
+   },
+   "maxLinksPerPage": {
+      "description": "单网页标记数量上限标签",
+      "message": "单网页标记数量上限"
+   },
+   "noExpiredRecords": {
+      "description": "没有过期记录时的提示",
+      "message": "当前没有可清除的过期记录。"
+   },
+   "noMarks": {
+      "description": "无标记记录提示",
+      "message": "暂无标记记录"
+   },
+   "noText": {
+      "description": "当链接没有文字时的占位",
+      "message": "（无文本）"
+   },
+   "oneDay": {
+      "description": "1天",
+      "message": "1天"
+   },
+   "oneHour": {
+      "description": "1小时",
+      "message": "1小时"
+   },
+   "operations": {
+      "description": "操作列标题",
+      "message": "操作"
+   },
+   "optionsDescription": {
+      "description": "选项页面描述",
+      "message": "自定义链接标记的外观和行为"
+   },
+   "optionsSettings": {
+      "description": "选项设置按钮",
+      "message": "选项设置"
+   },
+   "optionsTitle": {
+      "description": "选项页面标题",
+      "message": "链接标记器 - 选项设置"
+   },
+   "performanceAndQuantity": {
+      "description": "性能与数量配置标题",
+      "message": "性能与数量配置"
+   },
+   "permanent": {
+      "description": "永久",
+      "message": "永久"
+   },
+   "popupTitle": {
+      "description": "弹出窗口标题",
+      "message": "链接标记器"
+   },
+   "recordNotFound": {
+      "description": "删除时记录不存在的提示",
+      "message": "未找到要删除的记录。"
+   },
+   "refresh": {
+      "description": "刷新列表按钮",
+      "message": "刷新列表"
+   },
+   "refreshPage": {
+      "description": "刷新页面建议",
+      "message": "刷新页面重新开始标记"
+   },
+   "resetDefault": {
+      "description": "恢复默认按钮",
+      "message": "恢复默认"
+   },
+   "saveSettings": {
+      "description": "保存设置按钮",
+      "message": "保存设置"
+   },
+   "searchPlaceholder": {
+      "description": "搜索框占位符",
+      "message": "搜索链接或域名..."
+   },
+   "selectFile": {
+      "description": "未选择文件提示",
+      "message": "请选择要导入的 JSON 文件。"
+   },
+   "sevenDays": {
+      "description": "7天",
+      "message": "7天"
+   },
+   "showMarkTime": {
+      "description": "显示标记时间标签",
+      "message": "显示标记时间"
+   },
+   "star": {
+      "description": "五角星图标样式",
+      "message": "五角星"
+   },
+   "statistics": {
+      "description": "统计信息标题",
+      "message": "统计信息"
+   },
+   "statusFilter": {
+      "description": "状态筛选标签",
+      "message": "状态筛选"
+   },
+   "strikethrough": {
+      "description": "删除线文本样式",
+      "message": "删除线"
+   },
+   "styleCustomization": {
+      "description": "样式自定义标题",
+      "message": "样式自定义"
+   },
+   "textStyle": {
+      "description": "文本样式标签",
+      "message": "文本样式"
+   },
+   "thirtyDays": {
+      "description": "30天",
+      "message": "30天"
+   },
+   "timeDisplayFormat": {
+      "description": "时间显示格式标签",
+      "message": "时间显示格式"
+   },
+   "totalMarks": {
+      "description": "总标记数",
+      "message": "总标记数"
+   },
+   "unlimited": {
+      "description": "无限",
+      "message": "无限"
+   },
+   "unmarkLink": {
+      "description": "右键菜单取消标记链接",
+      "message": "取消标记此链接"
+   },
+   "valid": {
+      "description": "有效状态",
+      "message": "有效"
+   },
+   "validMarks": {
+      "description": "有效标记",
+      "message": "有效标记"
+   },
+   "version": {
+      "description": "版本标签",
+      "message": "版本"
+   },
+   "whitelist": {
+      "description": "白名单标签",
+      "message": "白名单（仅标记这些URL）"
+   },
+   "whitelistPlaceholder": {
+      "description": "白名单输入框占位符",
+      "message": "例如: *.google.com 或 *.google.com/search*"
+   }
+}

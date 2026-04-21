@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="historyTitle">链接标记器 - 历史记录</title>
+  <link rel="stylesheet" href="history.css">
+</head>
+<body>
+  <div class="history-container">
+    <header>
+      <h1 data-i18n="historyTitle">链接标记器 - 历史记录</h1>
+      <p data-i18n="historyDescription">查看和管理所有标记的链接</p>
+    </header>
+
+    <main>
+      <!-- 操作按钮 -->
+      <div class="action-buttons">
+        <button id="export-btn" class="btn btn-primary" data-i18n="export">导出数据</button>
+        <button id="import-btn" class="btn btn-secondary" data-i18n="import">导入数据</button>
+        <button id="clear-expired-btn" class="btn btn-warning" data-i18n="clearExpired">清除过期记录</button>
+        <button id="clear-all-btn" class="btn btn-danger" data-i18n="clearAll">清除所有记录</button>
+        <button id="refresh-btn" class="btn btn-info" data-i18n="refresh">刷新列表</button>
+      </div>
+
+      <!-- 统计信息 -->
+      <div class="stats-container">
+        <h3 data-i18n="statistics">统计信息</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-label" data-i18n="totalMarks">总标记数:</span>
+            <span class="stat-value" id="total-count">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label" data-i18n="validMarks">有效标记:</span>
+            <span class="stat-value stat-active" id="active-count">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label" data-i18n="expiredMarks">过期标记:</span>
+            <span class="stat-value stat-expired" id="expired-count">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label" data-i18n="markedDomains">标记域名数:</span>
+            <span class="stat-value" id="domain-count">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 搜索和分页 -->
+      <div class="search-pagination-container">
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="搜索链接、域名...">
+          <select id="search-type">
+            <option value="url">按URL</option>
+            <option value="domain">按域名</option>
+          </select>
+          <select id="status-filter">
+            <option value="all">全部</option>
+            <option value="active">仅有效</option>
+            <option value="expired">仅过期</option>
+          </select>
+        </div>
+        <div class="pagination-info">
+          <span id="pagination-info">显示 0-0 条，共 0 条</span>
+        </div>
+      </div>
+
+      <div class="pagination-controls">
+        <button id="first-page-btn" class="btn btn-small">首页</button>
+        <button id="prev-page-btn" class="btn btn-small">上一页</button>
+        <span id="page-info">第 1 页 / 共 1 页</span>
+        <button id="next-page-btn" class="btn btn-small">下一页</button>
+        <button id="last-page-btn" class="btn btn-small">末页</button>
+        <select id="page-size">
+          <option value="50">50/页</option>
+          <option value="100" selected>100/页</option>
+          <option value="200">200/页</option>
+          <option value="500">500/页</option>
+        </select>
+      </div>
+
+      <!-- 导入选项 -->
+      <div id="import-options" class="hidden">
+        <h3 data-i18n="import">导入数据</h3>
+        <input type="file" id="import-file" accept=".json">
+        <div class="import-mode">
+          <label><input type="radio" name="import-mode" value="replace" checked> <span data-i18n="importReplace">覆盖现有数据</span></label>
+          <label><input type="radio" name="import-mode" value="append"> <span data-i18n="importAppend">追加到现有数据</span></label>
+        </div>
+        <button id="confirm-import-btn" class="btn btn-primary" data-i18n="confirmImport">确认导入</button>
+        <button id="cancel-import-btn" class="btn btn-secondary" data-i18n="cancel">取消</button>
+      </div>
+
+      <!-- 历史记录列表 -->
+      <div class="history-list">
+        <h2 data-i18n="markHistory">标记记录</h2>
+        <div id="history-table-container">
+          <table id="history-table">
+            <thead>
+              <tr>
+                <th data-i18n="linkUrl">链接地址</th>
+                <th data-i18n="markTime">标记时间</th>
+                <th data-i18n="domain">所属域名</th>
+                <th data-i18n="markValidDuration">有效时长</th>
+                <th data-i18n="markStatus">状态</th>
+                <th data-i18n="operations">操作</th>
+              </tr>
+            </thead>
+            <tbody id="history-body">
+            </tbody>
+          </table>
+        </div>
+        <div id="empty-state" class="hidden">
+          <p data-i18n="noMarks">暂无标记记录</p>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p data-i18n="footerVersion">链接标记器 v1.0.0</p>
+    </footer>
+  </div>
+
+  <script src="../utils/utils.js"></script>
+  <script src="history.js"></script>
+</body>
+</html>

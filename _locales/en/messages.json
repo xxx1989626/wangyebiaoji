@@ -1,0 +1,496 @@
+{
+   "active": {
+      "description": "Active status",
+      "message": "Active"
+   },
+   "add": {
+      "description": "Add button",
+      "message": "Add"
+   },
+   "allDomains": {
+      "description": "All domains",
+      "message": "All Domains"
+   },
+   "allStatus": {
+      "description": "All status",
+      "message": "All Status"
+   },
+   "automationRules": {
+      "description": "Automation rules title",
+      "message": "Automation Rules"
+   },
+   "backgroundColor": {
+      "description": "Background color label",
+      "message": "Background Color"
+   },
+   "blacklist": {
+      "description": "Blacklist label",
+      "message": "Blacklist (Don't mark these URLs)"
+   },
+   "blacklistPlaceholder": {
+      "description": "Blacklist input placeholder",
+      "message": "Example: *.baidu.com or *.baidu.com/search*"
+   },
+   "bold": {
+      "description": "Bold text style",
+      "message": "Bold"
+   },
+   "cancel": {
+      "description": "Cancel button",
+      "message": "Cancel"
+   },
+   "check": {
+      "description": "Check icon style",
+      "message": "Check"
+   },
+   "clearAll": {
+      "description": "Clear all button",
+      "message": "Clear All"
+   },
+   "clearAllConfirm": {
+      "description": "History page clear all confirmation prompt",
+      "message": "Are you sure you want to clear all history records? This action cannot be undone."
+   },
+   "clearAllMarks": {
+      "description": "Clear all marks button",
+      "message": "Clear All Marks"
+   },
+   "clearAllMessage": {
+      "description": "Clear all message",
+      "message": "All history records have been cleared."
+   },
+   "clearConfirm": {
+      "description": "Clear confirmation prompt (shared)",
+      "message": "Are you sure you want to clear all mark records? This action cannot be undone."
+   },
+   "clearExpired": {
+      "description": "Clear expired records button",
+      "message": "Clear Expired"
+   },
+   "clearExpiredMessage": {
+      "description": "Clear expired records message",
+      "message": "{count} expired records have been cleared.",
+      "placeholders": {
+         "count": {
+            "content": "$1",
+            "example": "10"
+         }
+      }
+   },
+   "clearFailed": {
+      "description": "Clear failed prompt",
+      "message": "Clear failed: {error}",
+      "placeholders": {
+         "error": {
+            "content": "$1",
+            "example": "Unknown error"
+         }
+      }
+   },
+   "clearMarks": {
+      "description": "Clear marks suggestion",
+      "message": "Clear some unnecessary marks"
+   },
+   "clearSuccess": {
+      "description": "Clear success title",
+      "message": "Clear successful"
+   },
+   "confirmImport": {
+      "description": "Confirm import button",
+      "message": "Confirm Import"
+   },
+   "customTimeFormat": {
+      "description": "Custom time format label",
+      "message": "Custom Time Format"
+   },
+   "customTimeFormatPlaceholder": {
+      "description": "Custom time format placeholder",
+      "message": "Example: YYYY/MM/DD"
+   },
+   "delete": {
+      "description": "Delete button",
+      "message": "Delete"
+   },
+   "deleteConfirm": {
+      "description": "Delete confirmation prompt",
+      "message": "Are you sure you want to delete this mark?"
+   },
+   "deleteError": {
+      "description": "Delete error prompt",
+      "message": "An error occurred while deleting: {error}",
+      "placeholders": {
+         "error": {
+            "content": "$1",
+            "example": "Unknown error"
+         }
+      }
+   },
+   "deleteFailed": {
+      "description": "Delete failed title",
+      "message": "Delete failed"
+   },
+   "deleteSuccess": {
+      "description": "Single delete success title",
+      "message": "Delete successful"
+   },
+   "deleteSuccessMessage": {
+      "description": "Single delete success detailed prompt",
+      "message": "The selected mark record has been deleted."
+   },
+   "disabled": {
+      "description": "Disabled status",
+      "message": "Disabled"
+   },
+   "domain": {
+      "description": "Domain",
+      "message": "Domain"
+   },
+   "domainFilter": {
+      "description": "Domain filter label",
+      "message": "Domain Filter"
+   },
+   "dot": {
+      "description": "Dot icon style",
+      "message": "Dot"
+   },
+   "enableAutomationRules": {
+      "description": "Enable automation rules label",
+      "message": "Enable Automation Rules"
+   },
+   "enableBackgroundColor": {
+      "description": "Enable background color label",
+      "message": "Enable Background Color"
+   },
+   "enabled": {
+      "description": "Enabled status",
+      "message": "Enabled"
+   },
+   "error": {
+      "description": "Generic error title",
+      "message": "Error"
+   },
+   "expired": {
+      "description": "Expired status",
+      "message": "Expired"
+   },
+   "expiredMarks": {
+      "description": "Expired marks",
+      "message": "Expired Marks"
+   },
+   "export": {
+      "description": "Export button",
+      "message": "Export"
+   },
+   "exportSuccess": {
+      "description": "Export success prompt",
+      "message": "Export successful!"
+   },
+   "exportSuccessMessage": {
+      "description": "Export success detailed prompt",
+      "message": "Data has been exported to file: {fileName}",
+      "placeholders": {
+         "fileName": {
+            "content": "$1",
+            "example": "link-marker-data-2026-02-09_12-00-00.json"
+         }
+      }
+   },
+   "extensionDescription": {
+      "description": "Extension description",
+      "message": "Mark and track clicked links on web pages"
+   },
+   "extensionName": {
+      "description": "Extension name",
+      "message": "Link Marker"
+   },
+   "filter": {
+      "description": "Filter title",
+      "message": "Filter"
+   },
+   "footerVersion": {
+      "description": "Footer version info on history page",
+      "message": "Link Marker v1.0.0"
+   },
+   "globalEnable": {
+      "description": "Global enable toggle label",
+      "message": "Global Enable"
+   },
+   "highlightOpacity": {
+      "description": "Highlight opacity label",
+      "message": "Highlight Opacity"
+   },
+   "history": {
+      "description": "History button",
+      "message": "History"
+   },
+   "historyDescription": {
+      "description": "History page description",
+      "message": "View and manage your link mark history"
+   },
+   "historyTitle": {
+      "description": "History page title",
+      "message": "Link Marker - Mark History"
+   },
+   "iconSize": {
+      "description": "Icon size label",
+      "message": "Icon Size"
+   },
+   "iconStyle": {
+      "description": "Icon style label",
+      "message": "Prefix Icon Style"
+   },
+   "import": {
+      "description": "Import button",
+      "message": "Import"
+   },
+   "importAppend": {
+      "description": "Import mode: append",
+      "message": "Append to existing data"
+   },
+   "importError": {
+      "description": "Import failure prompt",
+      "message": "Import failed, please check the file format"
+   },
+   "importFailed": {
+      "description": "Import failed title",
+      "message": "Import failed"
+   },
+   "importReplace": {
+      "description": "Import mode: replace",
+      "message": "Replace existing data"
+   },
+   "importSuccess": {
+      "description": "Import success prompt",
+      "message": "Import successful!"
+   },
+   "importSuccessMessage": {
+      "description": "Import success detailed prompt",
+      "message": "Data has been imported successfully."
+   },
+   "increaseLimit": {
+      "description": "Increase mark limit suggestion",
+      "message": "Increase the mark limit in options settings"
+   },
+   "info": {
+      "description": "Generic info title",
+      "message": "Info"
+   },
+   "italic": {
+      "description": "Italic text style",
+      "message": "Italic"
+   },
+   "jsonFormatError": {
+      "description": "JSON format error prompt",
+      "message": "JSON file format error, please check and try again."
+   },
+   "linkText": {
+      "description": "Link text",
+      "message": "Link Text"
+   },
+   "linkUrl": {
+      "description": "Link URL",
+      "message": "Link URL"
+   },
+   "mainColor": {
+      "description": "Main color label",
+      "message": "Main Color"
+   },
+   "markHistory": {
+      "description": "Mark history title",
+      "message": "Mark History"
+   },
+   "markLimitReached": {
+      "description": "Mark limit warning title",
+      "message": "Mark Limit Reached"
+   },
+   "markLimitWarning": {
+      "description": "Mark limit warning content",
+      "message": "You have marked {count} links on this page, which has reached the set limit of {limit}. You can:",
+      "placeholders": {
+         "count": {
+            "content": "$1",
+            "example": "100"
+         },
+         "limit": {
+            "content": "$2",
+            "example": "1000"
+         }
+      }
+   },
+   "markLink": {
+      "description": "Context menu mark link",
+      "message": "Mark This Link"
+   },
+   "markStatus": {
+      "description": "Mark status",
+      "message": "Mark Status"
+   },
+   "markTime": {
+      "description": "Mark time",
+      "message": "Mark Time"
+   },
+   "markTimeConfiguration": {
+      "description": "Mark time configuration title",
+      "message": "Mark Time Configuration"
+   },
+   "markValidDuration": {
+      "description": "Mark valid duration label",
+      "message": "Mark Valid Duration"
+   },
+   "markedDomains": {
+      "description": "Marked domains",
+      "message": "Marked Domains"
+   },
+   "maxLinksPerPage": {
+      "description": "Max links per page label",
+      "message": "Max Links Per Page"
+   },
+   "noExpiredRecords": {
+      "description": "No expired records prompt",
+      "message": "There are currently no expired records to clear."
+   },
+   "noMarks": {
+      "description": "No mark records prompt",
+      "message": "No mark records"
+   },
+   "noText": {
+      "description": "Placeholder when link has no text",
+      "message": "(No text)"
+   },
+   "oneDay": {
+      "description": "1 day",
+      "message": "1 Day"
+   },
+   "oneHour": {
+      "description": "1 hour",
+      "message": "1 Hour"
+   },
+   "operations": {
+      "description": "Actions column title",
+      "message": "Actions"
+   },
+   "optionsDescription": {
+      "description": "Options page description",
+      "message": "Customize the appearance and behavior of link markers"
+   },
+   "optionsSettings": {
+      "description": "Options settings button",
+      "message": "Options"
+   },
+   "optionsTitle": {
+      "description": "Options page title",
+      "message": "Link Marker - Options"
+   },
+   "performanceAndQuantity": {
+      "description": "Performance and quantity configuration title",
+      "message": "Performance and Quantity Configuration"
+   },
+   "permanent": {
+      "description": "Permanent",
+      "message": "Permanent"
+   },
+   "popupTitle": {
+      "description": "Popup window title",
+      "message": "Link Marker"
+   },
+   "recordNotFound": {
+      "description": "Record not found prompt",
+      "message": "The record to delete was not found."
+   },
+   "refresh": {
+      "description": "Refresh list button",
+      "message": "Refresh"
+   },
+   "refreshPage": {
+      "description": "Refresh page suggestion",
+      "message": "Refresh the page to start marking again"
+   },
+   "resetDefault": {
+      "description": "Reset default button",
+      "message": "Reset Default"
+   },
+   "saveSettings": {
+      "description": "Save settings button",
+      "message": "Save Settings"
+   },
+   "searchPlaceholder": {
+      "description": "Search box placeholder",
+      "message": "Search link or domain..."
+   },
+   "selectFile": {
+      "description": "No file selected prompt",
+      "message": "Please select a JSON file to import."
+   },
+   "sevenDays": {
+      "description": "7 days",
+      "message": "7 Days"
+   },
+   "showMarkTime": {
+      "description": "Show mark time label",
+      "message": "Show Mark Time"
+   },
+   "star": {
+      "description": "Star icon style",
+      "message": "Star"
+   },
+   "statistics": {
+      "description": "Statistics title",
+      "message": "Statistics"
+   },
+   "statusFilter": {
+      "description": "Status filter label",
+      "message": "Status Filter"
+   },
+   "strikethrough": {
+      "description": "Strikethrough text style",
+      "message": "Strikethrough"
+   },
+   "styleCustomization": {
+      "description": "Style customization title",
+      "message": "Style Customization"
+   },
+   "textStyle": {
+      "description": "Text style label",
+      "message": "Text Style"
+   },
+   "thirtyDays": {
+      "description": "30 days",
+      "message": "30 Days"
+   },
+   "timeDisplayFormat": {
+      "description": "Time display format label",
+      "message": "Time Display Format"
+   },
+   "totalMarks": {
+      "description": "Total marks",
+      "message": "Total Marks"
+   },
+   "unlimited": {
+      "description": "Unlimited",
+      "message": "Unlimited"
+   },
+   "unmarkLink": {
+      "description": "Context menu unmark link",
+      "message": "Unmark This Link"
+   },
+   "valid": {
+      "description": "Valid status",
+      "message": "Valid"
+   },
+   "validMarks": {
+      "description": "Valid marks",
+      "message": "Valid Marks"
+   },
+   "version": {
+      "description": "Version label",
+      "message": "Version"
+   },
+   "whitelist": {
+      "description": "Whitelist label",
+      "message": "Whitelist (Only mark these URLs)"
+   },
+   "whitelistPlaceholder": {
+      "description": "Whitelist input placeholder",
+      "message": "Example: *.google.com or *.google.com/search*"
+   }
+}
