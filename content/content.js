@@ -385,18 +385,24 @@ function isDomainInList(url, list) {
 
   try {
     const urlObj = new URL(url);
-    const fullPath = urlObj.hostname + urlObj.pathname;
+    // 关键修正：必须包含 urlObj.search (即 ? 之后的部分)
+    // 这样才能匹配到 mod=viewthread&tid=170374
+    const targetString = urlObj.hostname + urlObj.pathname + urlObj.search;
+    const hostnameOnly = urlObj.hostname;
 
     return list.some(pattern => {
-      // 将通配符模式转换为正则表达式
-      // 支持: *.domain.com, domain.com/path/*, domain.com
-      const regexPattern = pattern
-        .replace(/\./g, '\\.')  // 转义点
-        .replace(/\*/g, '.*')    // * 匹配任意字符
-        .replace(/\?/g, '.');    // ? 匹配单个字符
+      // 1. 转义正则特殊字符，但暂时保留我们需要的通配符 * 和 ?
+      // 使用更安全的转义方式，处理 URL 中可能存在的 + ( ) [ ] 等
+      let regexPattern = pattern
+        .replace(/[.+^${}()|[\]\\]/g, '\\$&') 
+        .replace(/\*/g, '.*')                 // 将 * 转换为 .*
+        .replace(/\?/g, '.');                  // 将 ? 转换为 .
 
-      const regex = new RegExp('^' + regexPattern, 'i');
-      return regex.test(fullPath) || regex.test(urlObj.hostname);
+      // 2. 使用 ^ 和 $ 锚定，确保是从头到尾的精确匹配，防止误伤
+      const regex = new RegExp('^' + regexPattern + '$', 'i');
+
+      // 3. 同时尝试匹配：带参数的完整路径 或 纯域名
+      return regex.test(targetString) || regex.test(hostnameOnly);
     });
   } catch (e) {
     return false;
