@@ -46,23 +46,61 @@ async function loadConfig() {
 
 // 从background加载标记数据
 async function loadMarks() {
+  try {
+    const response = await chrome.runtime.sendMessage({ action: 'getAllData' });
+    if (response?.success && response.data) {
+      const domainMarks = response.data[currentDomain] || {};
+      markedLinks.clear();
+
+      Object.keys(domainMarks).forEach(url => {
+        const mark = domainMarks[url];
+        if (!isExpired(mark)) {
+          markedLinks.add(url);
+        }
+      });
+
+      console.log(`[Link Marker] 已加载 ${markedLinks.size} 条标记`);
+    }
+  } catch (error) {
+    console.warn('[Link Marker] 无法连接到后台，尝试从本地存储加载数据:', error.message);
+    await loadMarksFromStoragePromise();
+  }
+}
+
+function loadMarksFromStoragePromise() {
   return new Promise((resolve) => {
-    chrome.runtime.sendMessage({ action: 'getAllData' }, (response) => {
-      if (response?.success && response.data) {
-        const domainMarks = response.data[currentDomain] || {};
-        markedLinks.clear();
+    loadMarksFromStorage(resolve);
+  });
+}
 
-        Object.keys(domainMarks).forEach(url => {
-          const mark = domainMarks[url];
-          if (!isExpired(mark)) {
-            markedLinks.add(url);
-          }
-        });
+function loadMarksFromStorage(callback) {
+  chrome.storage.local.get(['linkDatabase', 'linkMarkerData'], (result) => {
+    let data = null;
 
-        console.log(`[Link Marker] 已加载 ${markedLinks.size} 条标记`);
+    if (result.linkDatabase) {
+      try {
+        data = JSON.parse(result.linkDatabase);
+      } catch (e) {
+        console.error('[Link Marker] 数据解析失败:', e);
       }
-      resolve();
-    });
+    }
+
+    if (!data && result.linkMarkerData) {
+      data = result.linkMarkerData;
+    }
+
+    if (data && data[currentDomain]) {
+      markedLinks.clear();
+      Object.keys(data[currentDomain]).forEach(url => {
+        const mark = data[currentDomain][url];
+        if (!isExpired(mark)) {
+          markedLinks.add(url);
+        }
+      });
+      console.log(`[Link Marker] 从本地存储加载 ${markedLinks.size} 条标记`);
+    }
+
+    if (callback) callback();
   });
 }
 
@@ -194,7 +232,7 @@ function scanAndMarkLinks() {
 }
 
 // 标记链接
-function markLink(linkUrl) {
+async function markLink(linkUrl) {
   if (markedLinks.has(linkUrl)) return;
 
   markedLinks.add(linkUrl);
@@ -207,22 +245,82 @@ function markLink(linkUrl) {
     }
   });
 
-  chrome.runtime.sendMessage({
-    action: 'markLink',
-    url: linkUrl
+  try {
+    await chrome.runtime.sendMessage({
+      action: 'markLink',
+      url: linkUrl
+    });
+  } catch (error) {
+    console.warn('[Link Marker] 无法连接到后台，尝试直接保存到本地存储:', error.message);
+    saveMarkToStorage(linkUrl);
+  }
+}
+
+function saveMarkToStorage(url) {
+  const markData = {
+    timestamp: Date.now(),
+    duration: config.duration || 'permanent'
+  };
+
+  chrome.storage.local.get(['linkDatabase'], (result) => {
+    let data = {};
+    if (result.linkDatabase) {
+      try {
+        data = JSON.parse(result.linkDatabase);
+      } catch (e) {
+        console.error('[Link Marker] 数据解析失败:', e);
+        data = {};
+      }
+    }
+
+    if (!data[currentDomain]) {
+      data[currentDomain] = {};
+    }
+    data[currentDomain][url] = markData;
+
+    chrome.storage.local.set({ linkDatabase: JSON.stringify(data) }, () => {
+      console.log('[Link Marker] 已直接保存到本地存储');
+    });
   });
 }
 
 // 取消标记链接
-function unmarkLink(linkUrl) {
+async function unmarkLink(linkUrl) {
   if (!markedLinks.has(linkUrl)) return;
 
   markedLinks.delete(linkUrl);
   unmarkLinkOnPage(linkUrl);
 
-  chrome.runtime.sendMessage({
-    action: 'unmarkLink',
-    url: linkUrl
+  try {
+    await chrome.runtime.sendMessage({
+      action: 'unmarkLink',
+      url: linkUrl
+    });
+  } catch (error) {
+    console.warn('[Link Marker] 无法连接到后台，尝试直接从本地存储删除:', error.message);
+    removeMarkFromStorage(linkUrl);
+  }
+}
+
+function removeMarkFromStorage(url) {
+  chrome.storage.local.get(['linkDatabase'], (result) => {
+    let data = {};
+    if (result.linkDatabase) {
+      try {
+        data = JSON.parse(result.linkDatabase);
+      } catch (e) {
+        console.error('[Link Marker] 数据解析失败:', e);
+        data = {};
+      }
+    }
+
+    if (data[currentDomain] && data[currentDomain][url]) {
+      delete data[currentDomain][url];
+
+      chrome.storage.local.set({ linkDatabase: JSON.stringify(data) }, () => {
+        console.log('[Link Marker] 已直接从本地存储删除');
+      });
+    }
   });
 }
 
