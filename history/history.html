@@ -18,6 +18,7 @@
       <div class="action-buttons">
         <button id="export-btn" class="btn btn-primary" data-i18n="export">导出数据</button>
         <button id="import-btn" class="btn btn-secondary" data-i18n="import">导入数据</button>
+        <button id="migrate-domain-btn" class="btn btn-info">域名迁移</button>
         <button id="clear-expired-btn" class="btn btn-warning" data-i18n="clearExpired">清除过期记录</button>
         <button id="clear-all-btn" class="btn btn-danger" data-i18n="clearAll">清除所有记录</button>
         <button id="refresh-btn" class="btn btn-info" data-i18n="refresh">刷新列表</button>
@@ -89,6 +90,27 @@
         </div>
         <button id="confirm-import-btn" class="btn btn-primary" data-i18n="confirmImport">确认导入</button>
         <button id="cancel-import-btn" class="btn btn-secondary" data-i18n="cancel">取消</button>
+      </div>
+
+      <!-- 域名迁移选项 -->
+      <div id="domain-migration-options" class="hidden">
+        <h3>域名迁移</h3>
+        <p>将旧域名的所有标记迁移到新域名</p>
+        <div class="migration-fields">
+          <label>
+            <span>旧域名:</span>
+            <input type="text" id="old-domain" placeholder="例如: www.gamer520.com">
+          </label>
+          <label>
+            <span>新域名:</span>
+            <input type="text" id="new-domain" placeholder="例如: www.gamers520.com">
+          </label>
+        </div>
+        <div class="migration-options">
+          <label><input type="checkbox" id="migrate-delete-old" checked> 迁移后删除旧域名数据</label>
+        </div>
+        <button id="confirm-migration-btn" class="btn btn-primary">确认迁移</button>
+        <button id="cancel-migration-btn" class="btn btn-secondary" data-i18n="cancel">取消</button>
       </div>
 
       <!-- 历史记录列表 -->

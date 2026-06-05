@@ -213,6 +213,7 @@ function setupEventListeners() {
 
   document.getElementById('import-btn').addEventListener('click', () => {
     document.getElementById('import-options').classList.remove('hidden');
+    document.getElementById('domain-migration-options').classList.add('hidden');
   });
 
   document.getElementById('cancel-import-btn').addEventListener('click', () => {
@@ -224,6 +225,20 @@ function setupEventListeners() {
   });
 
   document.getElementById('confirm-import-btn').addEventListener('click', importData);
+
+  // 域名迁移
+  document.getElementById('migrate-domain-btn').addEventListener('click', () => {
+    document.getElementById('domain-migration-options').classList.remove('hidden');
+    document.getElementById('import-options').classList.add('hidden');
+  });
+
+  document.getElementById('cancel-migration-btn').addEventListener('click', () => {
+    document.getElementById('domain-migration-options').classList.add('hidden');
+    document.getElementById('old-domain').value = '';
+    document.getElementById('new-domain').value = '';
+  });
+
+  document.getElementById('confirm-migration-btn').addEventListener('click', migrateDomain);
 
   document.getElementById('clear-expired-btn').addEventListener('click', clearExpired);
 
@@ -661,6 +676,88 @@ function showNotification(title, message, type = 'info') {
       document.head.removeChild(style);
     }, 300);
   }, 3000);
+}
+
+// 域名迁移功能
+function migrateDomain() {
+  const oldDomain = document.getElementById('old-domain').value.trim();
+  const newDomain = document.getElementById('new-domain').value.trim();
+  const deleteOld = document.getElementById('migrate-delete-old').checked;
+
+  if (!oldDomain) {
+    showNotification('错误', '请输入旧域名', 'error');
+    return;
+  }
+
+  if (!newDomain) {
+    showNotification('错误', '请输入新域名', 'error');
+    return;
+  }
+
+  if (oldDomain === newDomain) {
+    showNotification('错误', '旧域名和新域名不能相同', 'error');
+    return;
+  }
+
+  chrome.storage.local.get(['linkDatabase', 'linkMarkerData'], (result) => {
+    let data = null;
+
+    if (result.linkDatabase) {
+      try {
+        data = JSON.parse(result.linkDatabase);
+      } catch (e) {
+        data = null;
+      }
+    }
+
+    if (!data && result.linkMarkerData) {
+      data = result.linkMarkerData;
+    }
+
+    if (!data) {
+      showNotification('错误', '没有找到数据', 'error');
+      return;
+    }
+
+    if (!data[oldDomain]) {
+      showNotification('错误', `未找到域名 "${oldDomain}" 的标记数据`, 'error');
+      return;
+    }
+
+    const oldDomainData = data[oldDomain];
+    const migratedCount = Object.keys(oldDomainData).length;
+
+    // 创建新域名的数据（如果不存在）
+    if (!data[newDomain]) {
+      data[newDomain] = {};
+    }
+
+    // 迁移每个URL，替换域名部分
+    Object.keys(oldDomainData).forEach(oldUrl => {
+      const markData = oldDomainData[oldUrl];
+      // 替换URL中的域名
+      const newUrl = oldUrl.replace(new RegExp('//' + oldDomain.replace(/\./g, '\\.'), 'i'), '//' + newDomain);
+      data[newDomain][newUrl] = markData;
+    });
+
+    // 如果选择删除旧域名数据
+    if (deleteOld) {
+      delete data[oldDomain];
+    }
+
+    const jsonString = JSON.stringify(data);
+    chrome.storage.local.set({ linkDatabase: jsonString }, () => {
+      showNotification(
+        '迁移成功',
+        `已成功迁移 ${migratedCount} 条标记记录${deleteOld ? '，并删除了旧域名数据' : ''}`,
+        'success'
+      );
+      document.getElementById('domain-migration-options').classList.add('hidden');
+      document.getElementById('old-domain').value = '';
+      document.getElementById('new-domain').value = '';
+      loadHistoryData();
+    });
+  });
 }
 
 // 初始化
