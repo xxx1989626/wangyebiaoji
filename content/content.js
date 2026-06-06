@@ -15,18 +15,21 @@ let config = {
   autoRulesEnabled: false,
   blacklist: [],
   whitelist: [],
-  maxLinksPerPage: 1000
+  maxLinksPerPage: 1000,
+  domainAliases: []
 };
 
 let markedLinks = new Set();
 let linkElementCache = new Map();
 let isProcessing = false;
 let currentDomain = '';
+let primaryDomain = '';
 
 // 初始化
 async function init() {
   currentDomain = getDomain(window.location.href);
   await loadConfig();
+  primaryDomain = getPrimaryDomain(currentDomain);
   await loadMarks();
   setupEventListeners();
   scanAndMarkLinks();
@@ -44,27 +47,79 @@ async function loadConfig() {
   });
 }
 
-// 从background加载标记数据
+// 获取主域名（根据别名映射）
+function getPrimaryDomain(domain) {
+  if (!domain) return '';
+  
+  for (const group of config.domainAliases) {
+    if (group.primary === domain || group.aliases.includes(domain)) {
+      return group.primary;
+    }
+  }
+  return domain;
+}
+
+// 获取别名组内所有域名
+function getAllDomainsInGroup(domain) {
+  for (const group of config.domainAliases) {
+    if (group.primary === domain || group.aliases.includes(domain)) {
+      return [group.primary, ...group.aliases];
+    }
+  }
+  return [domain];
+}
+
+// 从background加载标记数据（支持域名别名）
 async function loadMarks() {
   try {
     const response = await chrome.runtime.sendMessage({ action: 'getAllData' });
     if (response?.success && response.data) {
-      const domainMarks = response.data[currentDomain] || {};
       markedLinks.clear();
+      
+      // 获取所有相关域名（当前域名及其别名）
+      const allDomains = getAllDomainsInGroup(currentDomain);
+      let totalMarks = 0;
 
-      Object.keys(domainMarks).forEach(url => {
-        const mark = domainMarks[url];
-        if (!isExpired(mark)) {
-          markedLinks.add(url);
-        }
-      });
+      for (const domain of allDomains) {
+        const domainMarks = response.data[domain] || {};
+        Object.keys(domainMarks).forEach(url => {
+          const mark = domainMarks[url];
+          if (!isExpired(mark)) {
+            // 将URL中的域名替换为当前域名，确保显示正确的标记
+            const normalizedUrl = normalizeUrlForCurrentDomain(url);
+            markedLinks.add(normalizedUrl);
+            totalMarks++;
+          }
+        });
+      }
 
-      console.log(`[Link Marker] 已加载 ${markedLinks.size} 条标记`);
+      console.log(`[Link Marker] 已加载 ${totalMarks} 条标记（来自 ${allDomains.length} 个域名）`);
     }
   } catch (error) {
     console.warn('[Link Marker] 无法连接到后台，尝试从本地存储加载数据:', error.message);
     await loadMarksFromStoragePromise();
   }
+}
+
+// 将URL中的域名替换为当前域名
+function normalizeUrlForCurrentDomain(url) {
+  try {
+    const urlObj = new URL(url);
+    const originalDomain = urlObj.hostname;
+    
+    // 关键修复：只有当原始域名和当前域名属于同一别名组时才替换
+    // 通过比较它们的主域名来判断
+    const originalPrimary = getPrimaryDomain(originalDomain);
+    const currentPrimary = getPrimaryDomain(currentDomain);
+    
+    if (originalPrimary === currentPrimary && originalDomain !== currentDomain) {
+      urlObj.hostname = currentDomain;
+      return urlObj.href;
+    }
+  } catch (e) {
+    console.error('[Link Marker] URL规范化失败:', e);
+  }
+  return url;
 }
 
 function loadMarksFromStoragePromise() {
@@ -89,15 +144,24 @@ function loadMarksFromStorage(callback) {
       data = result.linkMarkerData;
     }
 
-    if (data && data[currentDomain]) {
+    if (data) {
       markedLinks.clear();
-      Object.keys(data[currentDomain]).forEach(url => {
-        const mark = data[currentDomain][url];
-        if (!isExpired(mark)) {
-          markedLinks.add(url);
+      const allDomains = getAllDomainsInGroup(currentDomain);
+      let totalMarks = 0;
+
+      for (const domain of allDomains) {
+        if (data[domain]) {
+          Object.keys(data[domain]).forEach(url => {
+            const mark = data[domain][url];
+            if (!isExpired(mark)) {
+              const normalizedUrl = normalizeUrlForCurrentDomain(url);
+              markedLinks.add(normalizedUrl);
+              totalMarks++;
+            }
+          });
         }
-      });
-      console.log(`[Link Marker] 从本地存储加载 ${markedLinks.size} 条标记`);
+      }
+      console.log(`[Link Marker] 从本地存储加载 ${totalMarks} 条标记（来自 ${allDomains.length} 个域名）`);
     }
 
     if (callback) callback();
@@ -169,6 +233,16 @@ function setupEventListeners() {
         sendResponse({ success: true });
       });
       return true;
+    } else if (message.action === 'configUpdated') {
+      // 配置更新，重新加载配置并刷新标记
+      loadConfig().then(() => {
+        primaryDomain = getPrimaryDomain(currentDomain);
+        return loadMarks();
+      }).then(() => {
+        scanAndMarkLinks();
+        sendResponse({ success: true });
+      });
+      return true;
     }
     return true;
   });
@@ -231,7 +305,7 @@ function scanAndMarkLinks() {
   isProcessing = false;
 }
 
-// 标记链接
+// 标记链接（支持域名别名）
 async function markLink(linkUrl) {
   if (markedLinks.has(linkUrl)) return;
 
@@ -245,14 +319,30 @@ async function markLink(linkUrl) {
     }
   });
 
+  // 将URL转换为主域名版本进行存储
+  const storageUrl = convertToPrimaryDomainUrl(linkUrl);
+
   try {
     await chrome.runtime.sendMessage({
       action: 'markLink',
-      url: linkUrl
+      url: storageUrl,
+      domain: primaryDomain
     });
   } catch (error) {
     console.warn('[Link Marker] 无法连接到后台，尝试直接保存到本地存储:', error.message);
-    saveMarkToStorage(linkUrl);
+    saveMarkToStorage(storageUrl);
+  }
+}
+
+// 将URL转换为主域名版本
+function convertToPrimaryDomainUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    urlObj.hostname = primaryDomain;
+    return urlObj.href;
+  } catch (e) {
+    console.error('[Link Marker] URL转换失败:', e);
+    return url;
   }
 }
 
@@ -273,10 +363,11 @@ function saveMarkToStorage(url) {
       }
     }
 
-    if (!data[currentDomain]) {
-      data[currentDomain] = {};
+    // 使用主域名存储
+    if (!data[primaryDomain]) {
+      data[primaryDomain] = {};
     }
-    data[currentDomain][url] = markData;
+    data[primaryDomain][url] = markData;
 
     chrome.storage.local.set({ linkDatabase: JSON.stringify(data) }, () => {
       console.log('[Link Marker] 已直接保存到本地存储');
@@ -284,21 +375,25 @@ function saveMarkToStorage(url) {
   });
 }
 
-// 取消标记链接
+// 取消标记链接（支持域名别名）
 async function unmarkLink(linkUrl) {
   if (!markedLinks.has(linkUrl)) return;
 
   markedLinks.delete(linkUrl);
   unmarkLinkOnPage(linkUrl);
 
+  // 将URL转换为主域名版本进行删除
+  const storageUrl = convertToPrimaryDomainUrl(linkUrl);
+
   try {
     await chrome.runtime.sendMessage({
       action: 'unmarkLink',
-      url: linkUrl
+      url: storageUrl,
+      domain: primaryDomain
     });
   } catch (error) {
     console.warn('[Link Marker] 无法连接到后台，尝试直接从本地存储删除:', error.message);
-    removeMarkFromStorage(linkUrl);
+    removeMarkFromStorage(storageUrl);
   }
 }
 
@@ -314,8 +409,9 @@ function removeMarkFromStorage(url) {
       }
     }
 
-    if (data[currentDomain] && data[currentDomain][url]) {
-      delete data[currentDomain][url];
+    // 使用主域名删除
+    if (data[primaryDomain] && data[primaryDomain][url]) {
+      delete data[primaryDomain][url];
 
       chrome.storage.local.set({ linkDatabase: JSON.stringify(data) }, () => {
         console.log('[Link Marker] 已直接从本地存储删除');

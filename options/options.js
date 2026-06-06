@@ -62,7 +62,8 @@ const defaultConfig = {
   autoRulesEnabled: false,
   blacklist: [],
   whitelist: [],
-  maxLinksPerPage: 1000
+  maxLinksPerPage: 1000,
+  domainAliases: []
 };
 
 // 全局配置
@@ -73,6 +74,7 @@ function init() {
   initI18n();
   loadConfig();
   setupEventListeners();
+  setupDomainAliasListeners();
 }
 
 // 加载配置
@@ -367,38 +369,24 @@ function saveConfig() {
     chrome.storage.local.set({ linkMarkerConfig: config }, () => {
       showNotification('保存成功', '所有设置已保存', 'success');
       
-      // 判断是否需要通知页面更新标记
-      // 仅当影响显示的配置项发生变化时才通知更新
-      const displayConfigChanged =
-        oldConfig.enabled !== config.enabled ||
-        oldConfig.bold !== config.bold ||
-        oldConfig.italic !== config.italic ||
-        oldConfig.strikethrough !== config.strikethrough ||
-        oldConfig.highlight !== config.highlight ||
-        oldConfig.highlightColor !== config.highlightColor ||
-        oldConfig.highlightOpacity !== config.highlightOpacity ||
-        oldConfig.mainColor !== config.mainColor ||
-        oldConfig.showTime !== config.showTime;
-      
-      // 仅当影响显示的配置项发生变化时才通知页面更新
-      if (displayConfigChanged) {
-        chrome.tabs.query({}, (tabs) => {
-          tabs.forEach(tab => {
-            // 检查标签页URL是否有效，避免向扩展页面、文件系统页面等发送消息
-            if (tab.url && tab.url.startsWith('http')) {
-              chrome.tabs.sendMessage(tab.id, { action: 'updateMarks' }, () => {
-                // 忽略错误，使用箭头函数避免错误显示
-                if (chrome.runtime.lastError) {
+      // 关键修复：只要配置发生变化，就通知所有页面更新
+      // 包括域名别名配置的变化
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach(tab => {
+          // 检查标签页URL是否有效，避免向扩展页面、文件系统页面等发送消息
+          if (tab.url && tab.url.startsWith('http')) {
+            chrome.tabs.sendMessage(tab.id, { action: 'configUpdated' }, () => {
+              // 忽略错误
+              if (chrome.runtime.lastError) {
                   // 静默处理错误，避免错误消息显示
                 }
               });
             }
           });
         });
-      }
+      })
     });
-  });
-}
+  };
 
 // 重置配置
 function resetConfig() {
@@ -471,6 +459,179 @@ function showNotification(title, message, type = 'info') {
       document.head.removeChild(style);
     }, 300);
   }, 3000);
+}
+
+// 域名别名映射功能
+function setupDomainAliasListeners() {
+  const addAliasBtn = document.getElementById('add-alias-group');
+  if (addAliasBtn) {
+    addAliasBtn.addEventListener('click', addAliasGroup);
+  }
+}
+
+function addAliasGroup() {
+  const primaryDomain = document.getElementById('alias-primary-domain').value.trim();
+  const secondaryDomainsInput = document.getElementById('alias-secondary-domains').value.trim();
+  
+  if (!primaryDomain) {
+    showNotification('错误', '请输入主域名', 'error');
+    return;
+  }
+
+  const secondaryDomains = secondaryDomainsInput
+    .split(/[,，]/)
+    .map(d => d.trim())
+    .filter(d => d.length > 0);
+
+  const newGroup = {
+    primary: primaryDomain,
+    aliases: secondaryDomains
+  };
+
+  config.domainAliases.push(newGroup);
+  updateAliasGroupsUI();
+  
+  document.getElementById('alias-primary-domain').value = '';
+  document.getElementById('alias-secondary-domains').value = '';
+}
+
+function updateAliasGroupsUI() {
+  const listContainer = document.getElementById('alias-groups-list');
+  if (!listContainer) return;
+
+  listContainer.innerHTML = '';
+
+  if (config.domainAliases.length === 0) {
+    listContainer.innerHTML = '<p style="color: #888; padding: 10px;">暂无别名组</p>';
+    return;
+  }
+
+  config.domainAliases.forEach((group, index) => {
+    const groupElement = document.createElement('div');
+    groupElement.className = 'alias-group';
+    groupElement.innerHTML = `
+      <div class="alias-group-header">
+        <strong>组 ${index + 1}:</strong>
+        <div class="alias-group-actions">
+          <button class="btn btn-small btn-secondary edit-alias-group" data-index="${index}">编辑</button>
+          <button class="btn btn-small btn-danger remove-alias-group" data-index="${index}">删除</button>
+        </div>
+      </div>
+      <div class="alias-group-content">
+        <div class="alias-primary">
+          <span>主域名:</span>
+          <span class="domain-value">${group.primary}</span>
+        </div>
+        <div class="alias-secondary">
+          <span>别名域名:</span>
+          <span class="domain-value">${group.aliases.length > 0 ? group.aliases.join(', ') : '无'}</span>
+        </div>
+      </div>
+      <div class="alias-group-edit hidden" data-index="${index}">
+        <input type="text" class="edit-primary-domain" value="${group.primary}" placeholder="主域名">
+        <input type="text" class="edit-secondary-domains" value="${group.aliases.join(', ')}" placeholder="别名域名（用逗号分隔）">
+        <button class="btn btn-small btn-primary save-edit" data-index="${index}">保存</button>
+        <button class="btn btn-small btn-secondary cancel-edit" data-index="${index}">取消</button>
+      </div>
+    `;
+    listContainer.appendChild(groupElement);
+  });
+
+  // 添加删除按钮事件监听
+  document.querySelectorAll('.remove-alias-group').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = parseInt(e.target.getAttribute('data-index'));
+      removeAliasGroup(index);
+    });
+  });
+
+  // 添加编辑按钮事件监听
+  document.querySelectorAll('.edit-alias-group').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = parseInt(e.target.getAttribute('data-index'));
+      toggleEditMode(index);
+    });
+  });
+
+  // 添加保存编辑按钮事件监听
+  document.querySelectorAll('.save-edit').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = parseInt(e.target.getAttribute('data-index'));
+      saveAliasGroupEdit(index);
+    });
+  });
+
+  // 添加取消编辑按钮事件监听
+  document.querySelectorAll('.cancel-edit').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = parseInt(e.target.getAttribute('data-index'));
+      toggleEditMode(index);
+    });
+  });
+}
+
+function toggleEditMode(index) {
+  const groupElement = document.querySelector(`.alias-group-edit[data-index="${index}"]`);
+  const contentElement = document.querySelectorAll('.alias-group-content')[index];
+  const actionsElement = document.querySelectorAll('.alias-group-actions')[index];
+  
+  if (groupElement && contentElement && actionsElement) {
+    groupElement.classList.toggle('hidden');
+    contentElement.classList.toggle('hidden');
+    actionsElement.classList.toggle('hidden');
+  }
+}
+
+function saveAliasGroupEdit(index) {
+  const groupElement = document.querySelector(`.alias-group-edit[data-index="${index}"]`);
+  if (!groupElement) return;
+
+  const primaryInput = groupElement.querySelector('.edit-primary-domain');
+  const secondaryInput = groupElement.querySelector('.edit-secondary-domains');
+
+  if (!primaryInput || !secondaryInput) return;
+
+  const primaryDomain = primaryInput.value.trim();
+  const secondaryDomains = secondaryInput.value
+    .split(/[,，]/)
+    .map(d => d.trim())
+    .filter(d => d.length > 0);
+
+  if (!primaryDomain) {
+    showNotification('错误', '请输入主域名', 'error');
+    return;
+  }
+
+  config.domainAliases[index] = {
+    primary: primaryDomain,
+    aliases: secondaryDomains
+  };
+
+  updateAliasGroupsUI();
+}
+
+function removeAliasGroup(index) {
+  if (confirm('确定要删除这个别名组吗？')) {
+    config.domainAliases.splice(index, 1);
+    updateAliasGroupsUI();
+  }
+}
+
+// 更新UI时也要更新域名别名UI
+function updateUIAfterLoad() {
+  updateUI();
+  updateAliasGroupsUI();
+}
+
+// 重写loadConfig以加载域名别名配置
+const originalLoadConfig = loadConfig;
+function loadConfig() {
+  chrome.storage.local.get('linkMarkerConfig', (result) => {
+    if (result.linkMarkerConfig) {
+      config = { ...defaultConfig, ...result.linkMarkerConfig };
+    }
+    updateUIAfterLoad();
+  });
 }
 
 // 初始化

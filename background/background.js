@@ -85,8 +85,8 @@ function saveDatabase() {
 }
 
 // 标记链接 - 立即应用 + 延迟保存
-function markLink(url, tabId) {
-  const domain = getDomain(url);
+function markLink(url, tabId, customDomain) {
+  const domain = customDomain || getDomain(url);
   const timestamp = Date.now();
 
   if (!linkDatabase.has(domain)) {
@@ -115,8 +115,8 @@ function markLink(url, tabId) {
 }
 
 // 取消标记
-function unmarkLink(url, tabId) {
-  const domain = getDomain(url);
+function unmarkLink(url, tabId, customDomain) {
+  const domain = customDomain || getDomain(url);
 
   if (linkDatabase.has(domain)) {
     const domainLinks = linkDatabase.get(domain);
@@ -171,6 +171,18 @@ function getDomain(url) {
   }
 }
 
+// 获取主域名函数（与content.js保持一致）
+function getPrimaryDomain(domain, config) {
+  if (!domain || !config?.domainAliases) return domain;
+  
+  for (const group of config.domainAliases) {
+    if (group.primary === domain || group.aliases.includes(domain)) {
+      return group.primary;
+    }
+  }
+  return domain;
+}
+
 // 检查是否过期
 function isExpired(mark) {
   if (!mark || mark.duration === 'permanent') return false;
@@ -202,11 +214,11 @@ function setupEventListeners() {
       console.log('[Link Marker] 发送数据，域名数:', Object.keys(data).length);
       sendResponse({ success: true, data });
     } else if (message.action === 'markLink') {
-      console.log('[Link Marker] 标记链接:', message.url);
-      const markData = markLink(message.url, tabId);
+      console.log('[Link Marker] 标记链接:', message.url, '域名:', message.domain);
+      const markData = markLink(message.url, tabId, message.domain);
       sendResponse({ success: true, markData });
     } else if (message.action === 'unmarkLink') {
-      const success = unmarkLink(message.url, tabId);
+      const success = unmarkLink(message.url, tabId, message.domain);
       sendResponse({ success });
     } else if (message.action === 'checkExpiration') {
       checkExpiration();
@@ -270,13 +282,47 @@ function setupContextMenu() {
 // 处理标记链接
 function handleMarkLink(linkUrl, tab) {
   if (!linkUrl || !tab?.id) return;
-  markLink(linkUrl, tab.id);
+  
+  // 关键修复：获取配置并转换为主域名
+  chrome.storage.local.get('linkMarkerConfig', (result) => {
+    const config = result.linkMarkerConfig || {};
+    const domain = getDomain(linkUrl);
+    const primaryDomain = getPrimaryDomain(domain, config);
+    
+    // 将URL转换为主域名版本
+    try {
+      const urlObj = new URL(linkUrl);
+      urlObj.hostname = primaryDomain;
+      const storageUrl = urlObj.href;
+      
+      markLink(storageUrl, tab.id, primaryDomain);
+    } catch (e) {
+      markLink(linkUrl, tab.id);
+    }
+  });
 }
 
 // 处理取消标记
 function handleUnmarkLink(linkUrl, tab) {
   if (!linkUrl || !tab?.id) return;
-  unmarkLink(linkUrl, tab.id);
+  
+  // 关键修复：获取配置并转换为主域名
+  chrome.storage.local.get('linkMarkerConfig', (result) => {
+    const config = result.linkMarkerConfig || {};
+    const domain = getDomain(linkUrl);
+    const primaryDomain = getPrimaryDomain(domain, config);
+    
+    // 将URL转换为主域名版本
+    try {
+      const urlObj = new URL(linkUrl);
+      urlObj.hostname = primaryDomain;
+      const storageUrl = urlObj.href;
+      
+      unmarkLink(storageUrl, tab.id, primaryDomain);
+    } catch (e) {
+      unmarkLink(linkUrl, tab.id);
+    }
+  });
 }
 
 // 初始化默认配置

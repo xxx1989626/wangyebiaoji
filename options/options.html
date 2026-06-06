@@ -137,6 +137,24 @@
         </div>
       </section>
       
+      <!-- 域名别名映射 -->
+      <section class="option-section">
+        <h2>域名别名映射</h2>
+        <p style="color: #666; font-size: 14px;">将多个域名视为同一个网站，共享标记数据</p>
+        
+        <div class="option-group">
+          <label>别名组管理</label>
+          <div class="domain-alias-management">
+            <div class="alias-group-input">
+              <input type="text" id="alias-primary-domain" placeholder="主域名（例如: www.gamer520.com）">
+              <input type="text" id="alias-secondary-domains" placeholder="别名域名（用逗号分隔，例如: www.gamers520.com, gamer520.com）">
+              <button id="add-alias-group" class="btn btn-small">添加组</button>
+            </div>
+            <div id="alias-groups-list"></div>
+          </div>
+        </div>
+      </section>
+      
       <!-- 保存按钮 -->
       <div class="button-group">
         <button id="save-btn" class="btn btn-primary" data-i18n="saveSettings">保存设置</button>

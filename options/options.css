@@ -263,6 +263,104 @@ input:checked + .toggle-slider:before {
   color: white;
 }
 
+/* 域名别名管理 */
+.domain-alias-management {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.alias-group-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alias-group-input input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.alias-group-input button {
+  align-self: flex-start;
+}
+
+#alias-groups-list {
+  margin-top: 10px;
+}
+
+.alias-group {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.alias-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.alias-group-header strong {
+  font-size: 14px;
+  color: #333;
+}
+
+.alias-group-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alias-primary,
+.alias-secondary {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.alias-primary span:first-child,
+.alias-secondary span:first-child {
+  color: #666;
+  min-width: 70px;
+}
+
+.domain-value {
+  color: #333;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.alias-group-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.alias-group-edit {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alias-group-edit input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
 /* 隐藏元素 */
 .hidden {
   display: none !important;
