@@ -503,39 +503,66 @@ function removeStyles(element) {
 
 // 获取当前域名匹配的清洁模式卡片选择器
 function getCleanModeCardSelector() {
-  if (!config.cleanModeRules) return null;
+  if (!config.cleanModeRules || config.cleanModeRules.length === 0) {
+    console.log('[Link Marker] 清洁模式: 无规则配置');
+    return null;
+  }
 
   const domain = currentDomain;
   for (const rule of config.cleanModeRules) {
     if (matchDomainPattern(domain, rule.domainPattern)) {
+      console.log(`[Link Marker] 清洁模式: 域名 ${domain} 匹配规则 ${rule.domainPattern}, 选择器: ${rule.cardSelector}`);
       return rule.cardSelector;
     }
   }
+  console.log(`[Link Marker] 清洁模式: 域名 ${domain} 无匹配规则, 已配置规则:`, config.cleanModeRules.map(r => r.domainPattern));
   return null;
 }
 
 // 匹配域名模式（支持通配符 *）
 function matchDomainPattern(domain, pattern) {
   if (!domain || !pattern) return false;
-  const regexPattern = pattern.replace(/\./g, '\\.').replace(/\*/g, '.*');
-  const regex = new RegExp('^' + regexPattern + '$', 'i');
-  return regex.test(domain);
+
+  const patternHasWildcard = pattern.includes('*');
+
+  if (patternHasWildcard) {
+    const regexPattern = pattern.replace(/\./g, '\\.').replace(/\*/g, '.*');
+    const regex = new RegExp('^' + regexPattern + '$', 'i');
+    if (regex.test(domain)) return true;
+    if (domain.startsWith('www.') && regex.test(domain.slice(4))) return true;
+    if (!domain.startsWith('www.') && regex.test('www.' + domain)) return true;
+    return false;
+  }
+
+  const exactDomain = pattern.toLowerCase();
+  const testDomain = domain.toLowerCase();
+  if (exactDomain === testDomain) return true;
+  if (testDomain === 'www.' + exactDomain) return true;
+  if (exactDomain === 'www.' + testDomain) return true;
+  return false;
 }
 
 // 清洁模式：隐藏已标记链接的卡片容器
 function applyCleanMode(link) {
-  if (!config.cleanModeEnabled) return;
+  if (!config.cleanModeEnabled) {
+    return;
+  }
   const cardSelector = getCleanModeCardSelector();
   if (!cardSelector) return;
 
   try {
     const card = link.closest(cardSelector);
-    if (card && card.getAttribute('data-clean-mode') !== 'hidden') {
-      card.setAttribute('data-clean-mode', 'hidden');
-      card.style.display = 'none';
+    if (card) {
+      if (card.getAttribute('data-clean-mode') !== 'hidden') {
+        card.setAttribute('data-clean-mode', 'hidden');
+        card.style.display = 'none';
+        console.log('[Link Marker] 清洁模式: 已隐藏卡片', cardSelector);
+      }
+    } else {
+      console.log('[Link Marker] 清洁模式: 未找到卡片容器, 选择器:', cardSelector);
     }
   } catch (e) {
-    // 选择器无效时静默忽略
+    console.error('[Link Marker] 清洁模式: 选择器无效', cardSelector, e.message);
   }
 }
 

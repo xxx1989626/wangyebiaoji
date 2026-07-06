@@ -199,12 +199,31 @@ function updateCleanModeRulesUI() {
   config.cleanModeRules.forEach((rule, index) => {
     const li = document.createElement('li');
     const deleteText = chrome.i18n.getMessage('delete') || '删除';
+    const displaySelector = rule.rawSelector || rule.cardSelector;
     li.innerHTML = `
-      <span><strong>${rule.domainPattern}</strong> → <code style="background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: 12px;">${rule.cardSelector}</code></span>
+      <span><strong>${rule.domainPattern}</strong> → <code style="background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: 12px;" title="${rule.cardSelector}">${displaySelector}</code></span>
       <button class="remove-btn" data-type="cleanmode" data-index="${index}">${deleteText}</button>
     `;
     list.appendChild(li);
   });
+}
+
+// 将用户输入的类名转换为标准 CSS 选择器
+function normalizeCardSelector(input) {
+  if (!input) return '';
+
+  // 已经是标准选择器（以 . 或 # 开头），直接返回
+  if (input.startsWith('.') || input.startsWith('#') || input.startsWith('[')) {
+    return input.trim();
+  }
+
+  // 如果包含空格，按多个 class 处理
+  const classes = input.trim().split(/\s+/).filter(c => c);
+  if (classes.length > 0) {
+    return classes.map(c => '.' + c).join('');
+  }
+
+  return input;
 }
 
 // 设置事件监听器
@@ -357,14 +376,16 @@ function setupEventListeners() {
       const domainInput = document.getElementById('clean-mode-domain');
       const selectorInput = document.getElementById('clean-mode-selector');
       const domainPattern = domainInput.value.trim();
-      const cardSelector = selectorInput.value.trim();
+      const rawSelector = selectorInput.value.trim();
       
-      if (!domainPattern || !cardSelector) {
+      if (!domainPattern || !rawSelector) {
         showNotification('错误', '请填写域名和卡片选择器', 'error');
         return;
       }
+
+      const cardSelector = normalizeCardSelector(rawSelector);
       
-      config.cleanModeRules.push({ domainPattern, cardSelector });
+      config.cleanModeRules.push({ domainPattern, cardSelector, rawSelector });
       updateCleanModeRulesUI();
       domainInput.value = '';
       selectorInput.value = '';
