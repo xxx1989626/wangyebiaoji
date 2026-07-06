@@ -343,7 +343,10 @@ function initializeDefaultConfig() {
     autoRulesEnabled: false,
     blacklist: [],
     whitelist: [],
-    maxLinksPerPage: 1000
+    maxLinksPerPage: 1000,
+    domainAliases: [],
+    cleanModeEnabled: false,
+    cleanModeRules: []
   };
 
   chrome.storage.local.set({ linkMarkerConfig: defaultConfig }, () => {

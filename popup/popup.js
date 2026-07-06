@@ -37,7 +37,8 @@ function updateVersionInfo() {
 
 // 全局变量
 let config = {
-  enabled: true
+  enabled: true,
+  cleanModeEnabled: false
 };
 
 // 初始化
@@ -64,6 +65,12 @@ function updateUI() {
   if (enabledToggleElement) {
     enabledToggleElement.checked = config.enabled;
   }
+
+  // 更新清洁模式开关
+  const cleanModeToggleElement = document.getElementById('clean-mode-toggle');
+  if (cleanModeToggleElement) {
+    cleanModeToggleElement.checked = config.cleanModeEnabled;
+  }
   
   // 更新状态文本
   const statusText = document.getElementById('status-text');
@@ -80,6 +87,16 @@ function setupEventListeners() {
   if (enabledToggleElement) {
     enabledToggleElement.addEventListener('change', (e) => {
       config.enabled = e.target.checked;
+      saveConfig();
+      updateUI();
+    });
+  }
+
+  // 清洁模式开关
+  const cleanModeToggleElement = document.getElementById('clean-mode-toggle');
+  if (cleanModeToggleElement) {
+    cleanModeToggleElement.addEventListener('change', (e) => {
+      config.cleanModeEnabled = e.target.checked;
       saveConfig();
       updateUI();
     });

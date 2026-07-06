@@ -63,7 +63,9 @@ const defaultConfig = {
   blacklist: [],
   whitelist: [],
   maxLinksPerPage: 1000,
-  domainAliases: []
+  domainAliases: [],
+  cleanModeEnabled: false,
+  cleanModeRules: []
 };
 
 // 全局配置
@@ -131,6 +133,12 @@ function updateUI() {
   // 更新黑白名单
   updateBlacklistUI();
   updateWhitelistUI();
+
+  // 清洁模式
+  const cleanModeEnabledElement = document.getElementById('clean-mode-enabled');
+  if (cleanModeEnabledElement) cleanModeEnabledElement.checked = config.cleanModeEnabled;
+
+  updateCleanModeRulesUI();
 }
 
 // 更新自定义时间格式显示
@@ -172,6 +180,28 @@ function updateWhitelistUI() {
     li.innerHTML = `
       <span>${item}</span>
       <button class="remove-btn" data-type="whitelist" data-index="${index}">${deleteText}</button>
+    `;
+    list.appendChild(li);
+  });
+}
+
+// 更新清洁模式规则UI
+function updateCleanModeRulesUI() {
+  const list = document.getElementById('clean-mode-rules-list');
+  if (!list) return;
+  list.innerHTML = '';
+  
+  if (!config.cleanModeRules || config.cleanModeRules.length === 0) {
+    list.innerHTML = '<p style="color: #888; padding: 10px; font-size: 13px;">暂无规则</p>';
+    return;
+  }
+  
+  config.cleanModeRules.forEach((rule, index) => {
+    const li = document.createElement('li');
+    const deleteText = chrome.i18n.getMessage('delete') || '删除';
+    li.innerHTML = `
+      <span><strong>${rule.domainPattern}</strong> → <code style="background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: 12px;">${rule.cardSelector}</code></span>
+      <button class="remove-btn" data-type="cleanmode" data-index="${index}">${deleteText}</button>
     `;
     list.appendChild(li);
   });
@@ -309,6 +339,47 @@ function setupEventListeners() {
   if (maxLinksPerPageElement) {
     maxLinksPerPageElement.addEventListener('change', (e) => {
       config.maxLinksPerPage = parseInt(e.target.value);
+    });
+  }
+  
+  // 清洁模式
+  const cleanModeEnabledElement = document.getElementById('clean-mode-enabled');
+  if (cleanModeEnabledElement) {
+    cleanModeEnabledElement.addEventListener('change', (e) => {
+      config.cleanModeEnabled = e.target.checked;
+    });
+  }
+
+  // 添加清洁模式规则
+  const addCleanModeRuleBtn = document.getElementById('add-clean-mode-rule');
+  if (addCleanModeRuleBtn) {
+    addCleanModeRuleBtn.addEventListener('click', () => {
+      const domainInput = document.getElementById('clean-mode-domain');
+      const selectorInput = document.getElementById('clean-mode-selector');
+      const domainPattern = domainInput.value.trim();
+      const cardSelector = selectorInput.value.trim();
+      
+      if (!domainPattern || !cardSelector) {
+        showNotification('错误', '请填写域名和卡片选择器', 'error');
+        return;
+      }
+      
+      config.cleanModeRules.push({ domainPattern, cardSelector });
+      updateCleanModeRulesUI();
+      domainInput.value = '';
+      selectorInput.value = '';
+    });
+  }
+
+  // 清洁模式规则删除
+  const cleanModeRulesList = document.getElementById('clean-mode-rules-list');
+  if (cleanModeRulesList) {
+    cleanModeRulesList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-btn') && e.target.dataset.type === 'cleanmode') {
+        const index = parseInt(e.target.dataset.index);
+        config.cleanModeRules.splice(index, 1);
+        updateCleanModeRulesUI();
+      }
     });
   }
   

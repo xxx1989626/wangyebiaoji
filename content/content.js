@@ -16,7 +16,9 @@ let config = {
   blacklist: [],
   whitelist: [],
   maxLinksPerPage: 1000,
-  domainAliases: []
+  domainAliases: [],
+  cleanModeEnabled: false,
+  cleanModeRules: []
 };
 
 let markedLinks = new Set();
@@ -228,8 +230,12 @@ function setupEventListeners() {
       unmarkLinkOnPage(message.url);
       sendResponse({ success: true });
     } else if (message.action === 'updateMarks') {
-      loadMarks().then(() => {
+      loadConfig().then(() => {
+        primaryDomain = getPrimaryDomain(currentDomain);
+        return loadMarks();
+      }).then(() => {
         scanAndMarkLinks();
+        refreshCleanMode();
         sendResponse({ success: true });
       });
       return true;
@@ -240,6 +246,7 @@ function setupEventListeners() {
         return loadMarks();
       }).then(() => {
         scanAndMarkLinks();
+        refreshCleanMode();
         sendResponse({ success: true });
       });
       return true;
@@ -297,6 +304,7 @@ function scanAndMarkLinks() {
     if (markedLinks.has(linkUrl) && !link.hasAttribute('data-link-marker')) {
       link.setAttribute('data-link-marker', 'true');
       applyStyles(link);
+      applyCleanMode(link);
       marked++;
     }
   });
@@ -316,6 +324,7 @@ async function markLink(linkUrl) {
     if (!link.hasAttribute('data-link-marker')) {
       link.setAttribute('data-link-marker', 'true');
       applyStyles(link);
+      applyCleanMode(link);
     }
   });
 
@@ -428,6 +437,7 @@ function markLinkOnPage(linkUrl, markData) {
     if (!link.hasAttribute('data-link-marker')) {
       link.setAttribute('data-link-marker', 'true');
       applyStyles(link);
+      applyCleanMode(link);
     }
   });
 }
@@ -440,6 +450,7 @@ function unmarkLinkOnPage(linkUrl) {
     if (link.hasAttribute('data-link-marker')) {
       link.removeAttribute('data-link-marker');
       removeStyles(link);
+      removeCleanMode(link);
     }
   });
 }
@@ -488,6 +499,72 @@ function removeStyles(element) {
   element.style.fontWeight = '';
   element.style.fontStyle = '';
   element.style.textDecoration = '';
+}
+
+// 获取当前域名匹配的清洁模式卡片选择器
+function getCleanModeCardSelector() {
+  if (!config.cleanModeRules) return null;
+
+  const domain = currentDomain;
+  for (const rule of config.cleanModeRules) {
+    if (matchDomainPattern(domain, rule.domainPattern)) {
+      return rule.cardSelector;
+    }
+  }
+  return null;
+}
+
+// 匹配域名模式（支持通配符 *）
+function matchDomainPattern(domain, pattern) {
+  if (!domain || !pattern) return false;
+  const regexPattern = pattern.replace(/\./g, '\\.').replace(/\*/g, '.*');
+  const regex = new RegExp('^' + regexPattern + '$', 'i');
+  return regex.test(domain);
+}
+
+// 清洁模式：隐藏已标记链接的卡片容器
+function applyCleanMode(link) {
+  if (!config.cleanModeEnabled) return;
+  const cardSelector = getCleanModeCardSelector();
+  if (!cardSelector) return;
+
+  try {
+    const card = link.closest(cardSelector);
+    if (card && card.getAttribute('data-clean-mode') !== 'hidden') {
+      card.setAttribute('data-clean-mode', 'hidden');
+      card.style.display = 'none';
+    }
+  } catch (e) {
+    // 选择器无效时静默忽略
+  }
+}
+
+// 恢复清洁模式隐藏的卡片
+function removeCleanMode(link) {
+  const cardSelector = getCleanModeCardSelector();
+  if (!cardSelector) return;
+
+  try {
+    const card = link.closest(cardSelector);
+    if (card && card.getAttribute('data-clean-mode') === 'hidden') {
+      card.removeAttribute('data-clean-mode');
+      card.style.display = '';
+    }
+  } catch (e) {
+    // 选择器无效时静默忽略
+  }
+}
+
+// 刷新所有已标记链接的清洁模式状态
+function refreshCleanMode() {
+  const markedLinks = document.querySelectorAll('a[data-link-marker="true"]');
+  markedLinks.forEach(link => {
+    if (config.cleanModeEnabled) {
+      applyCleanMode(link);
+    } else {
+      removeCleanMode(link);
+    }
+  });
 }
 
 // 显示标记数量上限警告

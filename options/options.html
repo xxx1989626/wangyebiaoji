@@ -155,6 +155,32 @@
         </div>
       </section>
       
+      <!-- 清洁模式 -->
+      <section class="option-section">
+        <h2>清洁模式</h2>
+        <p style="color: #666; font-size: 14px;">开启后，已标记的链接卡片会自动隐藏，让页面更清爽</p>
+        
+        <div class="option-group">
+          <label>启用清洁模式</label>
+          <label class="toggle">
+            <input type="checkbox" id="clean-mode-enabled">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="option-group">
+          <label>网站卡片选择器配置</label>
+          <div class="list-management">
+            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+              <input type="text" id="clean-mode-domain" placeholder="域名（支持通配符，例如: *.javdb.com）" style="flex: 1;">
+              <input type="text" id="clean-mode-selector" placeholder="卡片选择器（例如: .item）" style="flex: 1;">
+              <button id="add-clean-mode-rule" class="btn btn-small">添加</button>
+            </div>
+            <ul id="clean-mode-rules-list"></ul>
+          </div>
+        </div>
+      </section>
+      
       <!-- 保存按钮 -->
       <div class="button-group">
         <button id="save-btn" class="btn btn-primary" data-i18n="saveSettings">保存设置</button>
