@@ -678,6 +678,35 @@ function showNotification(title, message, type = 'info') {
   }, 3000);
 }
 
+// URL规范化（与content.js、background.js保持一致）
+function normalizeUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    urlObj.pathname = normalizePath(urlObj.pathname);
+    return urlObj.href;
+  } catch {
+    return url;
+  }
+}
+
+function normalizePath(pathname) {
+  if (!pathname) return pathname;
+
+  const forumPatterns = [
+    /^\/threads\/[^.]*\.(\d+)\/?$/i,
+    /^\/threads\/(\d+)\/?$/i
+  ];
+
+  for (const pattern of forumPatterns) {
+    const match = pathname.match(pattern);
+    if (match) {
+      return `/threads/${match[1]}/`;
+    }
+  }
+
+  return pathname;
+}
+
 // 域名迁移功能
 function migrateDomain() {
   const oldDomain = document.getElementById('old-domain').value.trim();
@@ -732,12 +761,17 @@ function migrateDomain() {
       data[newDomain] = {};
     }
 
-    // 迁移每个URL，替换域名部分
+    // 迁移每个URL，替换域名部分并规范化
     Object.keys(oldDomainData).forEach(oldUrl => {
       const markData = oldDomainData[oldUrl];
       // 替换URL中的域名
-      const newUrl = oldUrl.replace(new RegExp('//' + oldDomain.replace(/\./g, '\\.'), 'i'), '//' + newDomain);
-      data[newDomain][newUrl] = markData;
+      let newUrl = oldUrl.replace(new RegExp('//' + oldDomain.replace(/\./g, '\\.'), 'i'), '//' + newDomain);
+      // URL规范化
+      newUrl = normalizeUrl(newUrl);
+      // 如果规范化后URL相同，保留时间较早的
+      if (!data[newDomain][newUrl] || markData.timestamp < data[newDomain][newUrl].timestamp) {
+        data[newDomain][newUrl] = markData;
+      }
     });
 
     // 如果选择删除旧域名数据

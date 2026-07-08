@@ -647,13 +647,35 @@ function normalizeUrl(url) {
     if (url.startsWith('//')) {
       url = window.location.protocol + url;
     } else if (url.startsWith('/')) {
-      return window.location.origin + url;
+      const fullUrl = window.location.origin + url;
+      const urlObj = new URL(fullUrl);
+      urlObj.pathname = normalizePath(urlObj.pathname);
+      return urlObj.href;
     }
     const urlObj = new URL(url);
+    urlObj.pathname = normalizePath(urlObj.pathname);
     return urlObj.href;
   } catch {
     return url;
   }
+}
+
+function normalizePath(pathname) {
+  if (!pathname) return pathname;
+
+  const forumPatterns = [
+    /^\/threads\/[^.]*\.(\d+)\/?$/i,
+    /^\/threads\/(\d+)\/?$/i
+  ];
+
+  for (const pattern of forumPatterns) {
+    const match = pathname.match(pattern);
+    if (match) {
+      return `/threads/${match[1]}/`;
+    }
+  }
+
+  return pathname;
 }
 
 function isValidLink(href) {

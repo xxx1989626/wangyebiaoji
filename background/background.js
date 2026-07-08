@@ -16,7 +16,7 @@ function init() {
 
 // 从存储加载数据库
 function loadDatabase() {
-  chrome.storage.local.get(['linkDatabase', 'linkMarkerData'], (result) => {
+  chrome.storage.local.get(['linkDatabase', 'linkMarkerData', 'urlNormalized'], (result) => {
     let hasData = false;
 
     // 优先加载新格式数据
@@ -24,13 +24,32 @@ function loadDatabase() {
       try {
         const data = JSON.parse(result.linkDatabase);
         linkDatabase = new Map();
+        let normalizedCount = 0;
+        
         Object.keys(data).forEach(domain => {
           const domainLinks = new Map();
           Object.keys(data[domain]).forEach(url => {
-            domainLinks.set(url, data[domain][url]);
+            // URL规范化
+            const normalizedUrl = normalizeUrl(url);
+            if (normalizedUrl !== url) {
+              normalizedCount++;
+            }
+            // 如果规范化后URL相同，保留时间较早的
+            if (!domainLinks.has(normalizedUrl) || 
+                data[domain][url].timestamp < domainLinks.get(normalizedUrl).timestamp) {
+              domainLinks.set(normalizedUrl, data[domain][url]);
+            }
           });
           linkDatabase.set(domain, domainLinks);
         });
+        
+        // 如果有规范化的URL，保存回存储
+        if (normalizedCount > 0) {
+          isDirty = true;
+          saveDatabase();
+          console.log(`[Link Marker] URL规范化完成，共规范化 ${normalizedCount} 条记录`);
+        }
+        
         console.log(`[Link Marker] 加载完成，总记录数: ${getTotalCount()}`);
         hasData = true;
       } catch (e) {
@@ -42,10 +61,20 @@ function loadDatabase() {
     // 如果没有新格式数据，检查旧格式并迁移
     if (!hasData && result.linkMarkerData) {
       console.log('[Link Marker] 发现旧格式数据，开始迁移...');
+      let normalizedCount = 0;
       Object.keys(result.linkMarkerData).forEach(domain => {
         const domainLinks = new Map();
         Object.keys(result.linkMarkerData[domain]).forEach(url => {
-          domainLinks.set(url, result.linkMarkerData[domain][url]);
+          // URL规范化
+          const normalizedUrl = normalizeUrl(url);
+          if (normalizedUrl !== url) {
+            normalizedCount++;
+          }
+          // 如果规范化后URL相同，保留时间较早的
+          if (!domainLinks.has(normalizedUrl) || 
+              result.linkMarkerData[domain][url].timestamp < domainLinks.get(normalizedUrl).timestamp) {
+            domainLinks.set(normalizedUrl, result.linkMarkerData[domain][url]);
+          }
         });
         linkDatabase.set(domain, domainLinks);
       });
@@ -53,6 +82,9 @@ function loadDatabase() {
       // 保存为新格式
       isDirty = true;
       saveDatabase();
+      if (normalizedCount > 0) {
+        console.log(`[Link Marker] URL规范化完成，共规范化 ${normalizedCount} 条记录`);
+      }
       console.log(`[Link Marker] 数据迁移完成，总记录数: ${getTotalCount()}`);
 
       // 保留旧格式数据一段时间以便回滚
@@ -86,7 +118,8 @@ function saveDatabase() {
 
 // 标记链接 - 立即应用 + 延迟保存
 function markLink(url, tabId, customDomain) {
-  const domain = customDomain || getDomain(url);
+  const normalizedUrl = normalizeUrl(url);
+  const domain = customDomain || getDomain(normalizedUrl);
   const timestamp = Date.now();
 
   if (!linkDatabase.has(domain)) {
@@ -99,7 +132,7 @@ function markLink(url, tabId, customDomain) {
     duration: 'permanent' // 默认永久
   };
 
-  domainLinks.set(url, markData);
+  domainLinks.set(normalizedUrl, markData);
   isDirty = true;
 
   // 延迟保存，避免频繁写入
@@ -108,7 +141,7 @@ function markLink(url, tabId, customDomain) {
 
   // 立即通知标签页更新
   if (tabId) {
-    notifyTab(tabId, { action: 'markAdded', url, markData });
+    notifyTab(tabId, { action: 'markAdded', url: normalizedUrl, markData });
   }
 
   return markData;
@@ -116,19 +149,20 @@ function markLink(url, tabId, customDomain) {
 
 // 取消标记
 function unmarkLink(url, tabId, customDomain) {
-  const domain = customDomain || getDomain(url);
+  const normalizedUrl = normalizeUrl(url);
+  const domain = customDomain || getDomain(normalizedUrl);
 
   if (linkDatabase.has(domain)) {
     const domainLinks = linkDatabase.get(domain);
-    if (domainLinks.has(url)) {
-      domainLinks.delete(url);
+    if (domainLinks.has(normalizedUrl)) {
+      domainLinks.delete(normalizedUrl);
       isDirty = true;
 
       if (saveTimer) clearTimeout(saveTimer);
       saveTimer = setTimeout(saveDatabase, SAVE_DEBOUNCE);
 
       if (tabId) {
-        notifyTab(tabId, { action: 'markRemoved', url });
+        notifyTab(tabId, { action: 'markRemoved', url: normalizedUrl });
       }
       return true;
     }
@@ -169,6 +203,36 @@ function getDomain(url) {
   } catch {
     return '';
   }
+}
+
+// URL规范化（与content.js保持一致）
+function normalizeUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    urlObj.pathname = normalizePath(urlObj.pathname);
+    return urlObj.href;
+  } catch {
+    return url;
+  }
+}
+
+// 路径规范化（提取论坛帖子ID）
+function normalizePath(pathname) {
+  if (!pathname) return pathname;
+
+  const forumPatterns = [
+    /^\/threads\/[^.]*\.(\d+)\/?$/i,
+    /^\/threads\/(\d+)\/?$/i
+  ];
+
+  for (const pattern of forumPatterns) {
+    const match = pathname.match(pattern);
+    if (match) {
+      return `/threads/${match[1]}/`;
+    }
+  }
+
+  return pathname;
 }
 
 // 获取主域名函数（与content.js保持一致）
@@ -283,21 +347,24 @@ function setupContextMenu() {
 function handleMarkLink(linkUrl, tab) {
   if (!linkUrl || !tab?.id) return;
   
+  // 先规范化URL
+  const normalizedUrl = normalizeUrl(linkUrl);
+  
   // 关键修复：获取配置并转换为主域名
   chrome.storage.local.get('linkMarkerConfig', (result) => {
     const config = result.linkMarkerConfig || {};
-    const domain = getDomain(linkUrl);
+    const domain = getDomain(normalizedUrl);
     const primaryDomain = getPrimaryDomain(domain, config);
     
     // 将URL转换为主域名版本
     try {
-      const urlObj = new URL(linkUrl);
+      const urlObj = new URL(normalizedUrl);
       urlObj.hostname = primaryDomain;
       const storageUrl = urlObj.href;
       
       markLink(storageUrl, tab.id, primaryDomain);
     } catch (e) {
-      markLink(linkUrl, tab.id);
+      markLink(normalizedUrl, tab.id);
     }
   });
 }
@@ -306,21 +373,24 @@ function handleMarkLink(linkUrl, tab) {
 function handleUnmarkLink(linkUrl, tab) {
   if (!linkUrl || !tab?.id) return;
   
+  // 先规范化URL
+  const normalizedUrl = normalizeUrl(linkUrl);
+  
   // 关键修复：获取配置并转换为主域名
   chrome.storage.local.get('linkMarkerConfig', (result) => {
     const config = result.linkMarkerConfig || {};
-    const domain = getDomain(linkUrl);
+    const domain = getDomain(normalizedUrl);
     const primaryDomain = getPrimaryDomain(domain, config);
     
     // 将URL转换为主域名版本
     try {
-      const urlObj = new URL(linkUrl);
+      const urlObj = new URL(normalizedUrl);
       urlObj.hostname = primaryDomain;
       const storageUrl = urlObj.href;
       
       unmarkLink(storageUrl, tab.id, primaryDomain);
     } catch (e) {
-      unmarkLink(linkUrl, tab.id);
+      unmarkLink(normalizedUrl, tab.id);
     }
   });
 }
